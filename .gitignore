@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Private settings: never commit these
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+
+# Generated from .env by scripts/env.js (contains the same private values)
+src/js/config/env.js
+
+# ---------------------------------------------------------------------------
+# Build output (recreate with: npm run build)
+# ---------------------------------------------------------------------------
+dist/
+
+# ---------------------------------------------------------------------------
+# Dependencies, logs, editor and OS files
+# ---------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>V Soccer School</title>
+  <meta name="description" content="V Soccer School, Bengaluru. Football coaching for ages 5 to 17 at Varthur, Sarjapura, Sarjapura Attibele Road and INSA Sports Academy.">
+  <link rel="icon" href="assets/logo.webp">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap">
+
+  <!-- Styles (order matters: tokens first) -->
+  <link rel="stylesheet" href="src/styles/tokens.css">
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/layout.css">
+  <link rel="stylesheet" href="src/styles/components.css">
+  <link rel="stylesheet" href="src/styles/pages.css">
+  <link rel="stylesheet" href="src/styles/celebration.css">
+  <link rel="stylesheet" href="src/styles/pitch-runner.css">
+</head>
+<body>
+
+  <!-- ================================================================
+       HEADER: brand, clock, theme toggle, requests, booking
+       ================================================================ -->
+  <header class="site-header">
+    <div class="container site-header__bar">
+      <a class="brand" href="#home" aria-label="V Soccer School home">
+        <img class="brand__logo" src="assets/logo.webp" alt="V Soccer School crest">
+        <span class="brand__text"><span class="brand__name">V&nbsp;Soccer School</span><span class="brand__city">Bengaluru</span></span>
+      </a>
+      <div class="site-header__actions">
+        <span class="header-clock" id="header-clock"></span>
+        <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
+        <a class="requests-link" id="requests-link" href="#my-requests"><span class="requests-link__prefix">My </span>Requests<span class="requests-link__badge" id="requests-badge" hidden>0</span></a>
+        <a class="btn btn--sm" href="#book-trial">Book a trial</a>
+        <!-- Phones only: opens the navigation menu -->
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+      </div>
+    </div>
+
+    <!-- Main navigation (filled from pages/routes.js).
+         Desktop: a bar under the header. Phones: a drop-down opened by the Menu button. -->
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <div class="container main-nav__list" id="main-nav-list"></div>
+      <div class="container main-nav__extras">
+        <a class="btn" href="#book-trial">Book a free trial</a>
+        <a class="requests-link" href="#my-requests">My requests</a>
+        <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================================================================
+       GROUND TABS: live status per ground (components/ground-tabs.js)
+       ================================================================ -->
+  <div class="ground-tabs" id="ground-tabs"></div>
+
+  <!-- ================================================================
+       SCREEN: current page is drawn here (pages/*.page.js)
+       ================================================================ -->
+  <main id="app"></main>
+
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <div>
+          <a class="brand" href="#home">
+            <img class="brand__logo" src="assets/logo.webp" alt="">
+            <span class="brand__text"><span class="brand__name">V&nbsp;Soccer School</span><span class="brand__city">Bengaluru</span></span>
+          </a>
+          <p class="muted" style="font-size:14px;margin-top:14px;max-width:34ch">Football coaching for boys and girls across east Bengaluru, led by a licensed former national-level player.</p>
+        </div>
+        <div><h4>School</h4><ul id="footer-links"></ul></div>
+        <div><h4>Grounds</h4><ul id="footer-grounds"></ul></div>
+        <div>
+          <h4>Fixtures & news</h4>
+          <p class="muted" style="font-size:14px;margin-bottom:10px">Get trial dates, holiday camps and match-day updates.</p>
+          <form id="newsletter-form" novalidate style="display:flex">
+            <label for="newsletter-email" style="position:absolute;left:-9999px">Email</label>
+            <input class="input" id="newsletter-email" name="email" type="email" placeholder="you@email.com" autocomplete="email" style="min-width:0">
+            <button class="btn btn--sm" type="submit">Join</button>
+          </form>
+          <span class="field-hint" id="newsletter-hint"></span>
+        </div>
+      </div>
+      <div class="site-footer__legal">
+        <span>© <span id="footer-year"></span> V Soccer School, Bengaluru · Home ground: INSA Sports Academy</span>
+        <span id="photo-credits"></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       OVERLAYS
+       ================================================================ -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="lightbox-root"></div>
+
+  <!-- App (ES modules) -->
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

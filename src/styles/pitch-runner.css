@@ -1,0 +1,121 @@
+/* ==========================================================================
+   pitch-runner.css
+   Strip fixed to the bottom of every page (components/pitch-runner.js).
+   A solid band (the page has matching bottom padding, so nothing is hidden).
+   Only the Hide button takes clicks.
+   ========================================================================== */
+
+.runner {
+  --runner-height: 112px;
+  --runner-grass: 16px;
+  --runner-player: 84px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  height: calc(var(--runner-height) + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  overflow: hidden;
+  /* Solid band so the player never runs over page text */
+  background: linear-gradient(180deg, var(--color-band) 0%, var(--color-panel) 100%);
+  border-top: 1px solid var(--color-line);
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* Page content and the back-to-top button stay clear of the strip */
+body.has-runner { padding-bottom: var(--runner-height-page, 112px); }
+body.has-runner .back-to-top { bottom: calc(112px + 12px + env(safe-area-inset-bottom, 0px)); }
+
+/* Grass with a touchline */
+.runner__grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--runner-grass) + env(safe-area-inset-bottom, 0px));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0 2px, transparent 2px),
+    repeating-linear-gradient(90deg, #4E9F5B 0 60px, #47935A 60px 120px);
+  box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Goal on the right edge */
+.runner__goal-wrap { position: absolute; right: 10px; bottom: calc(var(--runner-grass) - 2px + env(safe-area-inset-bottom, 0px)); width: 74px; }
+.runner__goal { display: block; width: 100%; height: auto; }
+.runner__net { transform-box: fill-box; transform-origin: left center; }
+.runner.is-scored .runner__net { animation: runner-net 0.6s ease-out; }
+@keyframes runner-net {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(5px) scaleY(1.03); }
+  65% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* "GOAL!" pops above the goal */
+.runner__goal-text {
+  position: absolute;
+  right: 22px;
+  bottom: calc(var(--runner-height) - 34px);
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: #E3B13B;
+  -webkit-text-stroke: 1.2px #17160F;
+  text-shadow: 0 2px 0 #17160F;
+  opacity: 0;
+  transform: scale(0.3);
+  transform-origin: center bottom;
+  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.runner.is-scored .runner__goal-text { opacity: 1; transform: scale(1); }
+
+/* Player and ball (positions set from JS every frame) */
+.runner__player {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--runner-grass) - 3px + env(safe-area-inset-bottom, 0px));
+  width: calc(var(--runner-player) * 56 / 96);
+  height: var(--runner-player);
+  opacity: var(--runner-fade, 1);
+  will-change: transform;
+}
+.runner__doll { display: block; width: 100%; height: 100%; overflow: visible; }
+.runner__ball-wrap {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--runner-grass) - 1px + env(safe-area-inset-bottom, 0px));
+  width: 15px;
+  height: 15px;
+  opacity: var(--runner-fade, 1);
+  will-change: transform;
+}
+.runner__ball { display: block; width: 100%; height: 100%; }
+
+/* Small hide button, bottom-left on the grass */
+.runner__hide {
+  position: absolute;
+  left: max(8px, env(safe-area-inset-left, 0px));
+  bottom: calc(2px + env(safe-area-inset-bottom, 0px));
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(23, 22, 15, 0.55);
+  color: #FFFFFF;
+  font-size: 11px;
+  line-height: 12px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.runner__hide:hover { background: rgba(23, 22, 15, 0.85); }
+
+/* Phones: a smaller strip */
+@media (max-width: 700px) {
+  .runner { --runner-height: 88px; --runner-grass: 14px; --runner-player: 64px; }
+  .runner__goal-wrap { width: 58px; right: 6px; }
+  .runner__goal-text { font-size: 24px; right: 12px; }
+  .runner__ball-wrap { width: 12px; height: 12px; }
+  body.has-runner { padding-bottom: 88px; }
+  body.has-runner .back-to-top { bottom: calc(88px + 10px + env(safe-area-inset-bottom, 0px)); }
+}

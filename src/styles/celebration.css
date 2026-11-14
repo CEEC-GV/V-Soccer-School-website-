@@ -1,0 +1,66 @@
+/* ==========================================================================
+   celebration.css
+   The player cut-out that appears after every request
+   (components/goal-celebration.js + components/thumbs-up-scene.js).
+   Only the player is visible: no card, background or overlay, and the page
+   underneath stays clickable.
+   Timeline: pops up -> thumb wiggles, ball rocks -> fades out at 5 s.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Placement: centred over the page, ignores clicks except on the player
+   -------------------------------------------------------------------------- */
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.celebration__doll {
+  width: auto;
+  height: min(46vh, 340px);
+  aspect-ratio: 56 / 94;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: doll-in 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.celebration.is-closing .celebration__doll { animation: doll-out 0.35s ease both; }
+
+@keyframes doll-in {
+  from { opacity: 0; transform: translateY(40px) scale(0.6); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes doll-out {
+  to { opacity: 0; transform: translateY(16px) scale(0.92); }
+}
+
+/* Screen-reader-only text (announces "Trial request sent" etc.) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Player motion
+   -------------------------------------------------------------------------- */
+.thumbs { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* Thumb wiggles around the elbow (bottom-left of the forearm group) */
+.thumbs .thumbs__thumb { transform-box: fill-box; transform-origin: 30% 100%; animation: thumbs-wiggle 0.55s ease-in-out 0.6s 6 alternate; }
+@keyframes thumbs-wiggle { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
+
+/* Ball rocks under the boot */
+.thumbs .thumbs__ball { transform-box: fill-box; transform-origin: 50% 50%; animation: thumbs-ball 1.2s ease-in-out 0.6s infinite alternate; }
+@keyframes thumbs-ball { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
