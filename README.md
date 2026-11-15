@@ -190,6 +190,6 @@ v-soccer-school/
 
 ## Credits
 
-- Photos: free licence from [Pexels](https://www.pexels.com), credited in the site footer.
+- Photos: free licence from [Pexels](https://www.pexels.com) (no attribution required; photographers are listed in `PHOTOS` in site.config.js).
 - Home video: "Aerial Video of a Football Match" by Vitaliy Haiduk on Pexels.
 - Fonts: Bebas Neue and Poppins from Google Fonts.

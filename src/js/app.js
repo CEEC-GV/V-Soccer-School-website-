@@ -5,7 +5,7 @@
  * Starts the website:
  *   1. Theme        light by default, dark via toggle, remembered
  *   1b. Phone menu  Menu button opens / closes the navigation
- *   2. Site chrome  navigation bar, footer lists, photo credits
+ *   2. Site chrome  navigation bar, footer lists
  *   3. Routing      draws the screen for the current address
  *   4. Live data    clock, ground tabs and status refresh every 15 seconds
  *   5. Header badge open-request count
@@ -13,7 +13,7 @@
  *   7. Bootstrap    wires everything together on load
  * ============================================================================
  */
-import { BRAND, GROUNDS, HERO_VIDEO, PHOTOS, findGround } from "./config/site.config.js";
+import { BRAND, GROUNDS, findGround } from "./config/site.config.js";
 import { renderLiveStatus, renderSessionBoard } from "./components/cards.js";
 import { renderGroundTabs } from "./components/ground-tabs.js";
 import { mountPitchRunner } from "./components/pitch-runner.js";
@@ -97,12 +97,8 @@ function renderChrome() {
   document.getElementById("footer-grounds").innerHTML = GROUNDS
     .map((ground) => `<li><a href="#ground-${ground.id}">${escapeHtml(ground.name)}</a></li>`).join("");
 
-  // Footer: year and photo credits
+  // Footer: year
   document.getElementById("footer-year").textContent = getIstNow().date.getFullYear();
-  const photographers = [...new Set(Object.values(PHOTOS).map((photo) => photo.credit))];
-  document.getElementById("photo-credits").innerHTML =
-    `Photos: ${photographers.map(escapeHtml).join(", ")} via <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a>` +
-    (HERO_VIDEO.src ? ` · Video: ${escapeHtml(HERO_VIDEO.credit)}` : "");
 }
 
 /* ============================================================================

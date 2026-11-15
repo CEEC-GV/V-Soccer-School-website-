@@ -280,7 +280,10 @@
   font-size: 11px;
   color: var(--color-muted);
 }
-.site-footer__legal a { color: var(--color-muted); }
+/* Quiet links: same faint colour as the text, underline only on hover */
+.site-footer__legal a { color: inherit; text-decoration: none; }
+.site-footer__legal a:hover,
+.site-footer__legal a:focus-visible { text-decoration: underline; }
 @media (max-width: 900px) { .site-footer__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 480px) { .site-footer__grid { grid-template-columns: 1fr; } }
 
