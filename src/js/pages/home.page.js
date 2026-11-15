@@ -47,7 +47,7 @@ export const homePage = {
 
       <!-- Player pathway (photo background) -->
       <section class="section section--photo">
-        ${renderSectionBackground("araku")}
+        ${renderSectionBackground("turf")}
         <div class="container">
         <div class="section-head">
           <div><h2>From first touch to match day</h2></div>

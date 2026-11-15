@@ -3,10 +3,12 @@
  * pages/contact.page.js  ->  #contact   (optional ?topic=<id>)
  * ----------------------------------------------------------------------------
  * Contact form, direct contact details and FAQ.
+ * WhatsApp comes first when BRAND.whatsapp is set: a chat button in the
+ * banner, and the form opens WhatsApp with the details typed in.
  * ============================================================================
  */
-import { FAQ } from "../config/site.config.js";
-import { renderContactDetails } from "../components/cards.js";
+import { BRAND, FAQ } from "../config/site.config.js";
+import { renderContactDetails, renderWhatsAppButton } from "../components/cards.js";
 import { renderPageBanner, renderPhoto } from "../components/media.js";
 import { escapeHtml } from "../core/dom.js";
 import { bindContactForm, renderContactForm } from "../forms/contact-form.js";
@@ -19,8 +21,11 @@ export const contactPage = {
     return `
       ${renderPageBanner({
         title: "Talk to the school",
-        intro: "Send a question, or book a free trial if your child wants to play.",
+        intro: BRAND.whatsapp
+          ? "WhatsApp is the quickest way to reach us. Chat now, or fill in the form and we'll open WhatsApp with your details ready to send."
+          : "Send a question, or book a free trial if your child wants to play.",
         photo: "header",
+        actions: renderWhatsAppButton(),
       })}
 
       <!-- Form and side panel -->

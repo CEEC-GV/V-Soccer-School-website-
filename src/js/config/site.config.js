@@ -17,17 +17,18 @@ import { ENV } from "./env.js";
 
 /* ---------------------------------------------------------------------------
    Brand and contact
-   phone / instagram come from .env (SCHOOL_PHONE, SCHOOL_INSTAGRAM).
-   A phone number turns on the Call and WhatsApp buttons.
-   `email` is an optional PUBLIC address shown on the Contact page; it is
-   separate from the private inbox that receives form submissions.
+   email / instagram come from .env (SCHOOL_EMAIL, SCHOOL_INSTAGRAM).
+   The email is shown on the Contact page.
+   The phone number is not printed on the site. SCHOOL_WHATSAPP_CHAT powers
+   the "Chat on WhatsApp" button (the number is inside that link only).
    ------------------------------------------------------------------------ */
 export const BRAND = {
   name: "V Soccer School",
   city: "Bengaluru",
   logo: "assets/logo.webp",
-  phone: ENV.schoolPhone,
-  email: "",          // public address to display, e.g. "hello@vsoccerschool.in"
+  phone: "",          // not printed on the site on purpose
+  whatsapp: ENV.whatsappChat,  // opens a WhatsApp chat from the "Chat on WhatsApp" button
+  email: ENV.schoolEmail,
   instagram: ENV.schoolInstagram,
 };
 
@@ -50,6 +51,20 @@ export const EMAIL_DELIVERY = {
 };
 
 /* ---------------------------------------------------------------------------
+   WhatsApp delivery
+   Every request is also sent to the school's WhatsApp. The site posts it to
+   a Google Apps Script (apps-script/whatsapp-relay.gs) that holds the phone
+   number and CallMeBot key privately and forwards the message, so neither
+   appears in the page. Put the script's web-app URL in SCHOOL_WHATSAPP_RELAY.
+   Switches off automatically when SCHOOL_WHATSAPP_RELAY is empty.
+   ------------------------------------------------------------------------ */
+export const WHATSAPP_DELIVERY = {
+  enabled: Boolean(ENV.whatsappRelayUrl),
+  url: ENV.whatsappRelayUrl,
+  timeoutMs: 20000,
+};
+
+/* ---------------------------------------------------------------------------
    Photos (free Pexels licence, all taken in India)
    To use your own photo, change `src` to a file path such as "assets/varthur.jpg".
    `ratio` is the photo's shape; `focus` is which part to keep when cropping.
@@ -57,15 +72,15 @@ export const EMAIL_DELIVERY = {
 const pexels = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg`;
 
 export const PHOTOS = {
-  kick:    { src: pexels(4622751),  alt: "Young man playing an overhead bicycle kick in Kolkata",                    credit: "Godson Babu",     ratio: "16/9", focus: "center" },
-  araku:   { src: pexels(8814670),  alt: "Young men contesting the ball in a match on a muddy ground in Araku Valley", credit: "Ganta Srinivas",  ratio: "3/2",  focus: "center" },
+  practice: { src: pexels(19822993), alt: "Player practising on an outdoor pitch in Imphal, Manipur",                  credit: "Longjam Remson",  ratio: "3/2",  focus: "center" },
+  turf:    { src: pexels(14427657), alt: "Footballers competing for the ball on a green pitch",                        credit: "Jidev Mohan",     ratio: "3/2",  focus: "center" },
   imphal:  { src: pexels(19822992), alt: "Players battling for the ball during a match in Imphal, Manipur",            credit: "Longjam Remson",  ratio: "2/3",  focus: "center 40%" },
   teen:    { src: pexels(30158894), alt: "Teenage player in a red jersey beside the goalpost",                         credit: "Mohd Atir",       ratio: "2/3",  focus: "center 30%" },
   control: { src: pexels(18798601), alt: "Player controlling the ball during a game in Kuttanad, Kerala",              credit: "Ravi Roshan",     ratio: "2/3",  focus: "center 60%" },
   balance: { src: pexels(18798600), alt: "Player balancing the ball on his foot in Kuttanad, Kerala",                  credit: "Ravi Roshan",     ratio: "3/4",  focus: "center 60%" },
   strike:  { src: pexels(9786378),  alt: "Player striking the ball into the air in Dehradun",                         credit: "Rishab Bhandari", ratio: "4/5",  focus: "center" },
   header:  { src: pexels(3154902),  alt: "Young player balancing a football on his head on a grass field",            credit: "Yogendra Singh",  ratio: "2/3",  focus: "center 30%" },
-  goa:     { src: pexels(30987030), alt: "Evening football on a beach in Goa",                                         credit: "Divyanshu Pandey", ratio: "3/4", focus: "center" },
+  kitup:   { src: pexels(1928176),  alt: "Player in training kit lacing his boots at a football ground",               credit: "Balljinder Singh", ratio: "2/3", focus: "center 35%" },
 };
 
 /* ---------------------------------------------------------------------------
@@ -76,8 +91,10 @@ export const PHOTOS = {
    ------------------------------------------------------------------------ */
 export const HERO_VIDEO = {
   src: "https://videos.pexels.com/video-files/16186237/16186237-uhd_2560_1440_30fps.mp4",
+  // Smaller copy for phones (saves mobile data). If it can't load, phones use `src`.
+  mobileSrc: "https://videos.pexels.com/video-files/16186237/16186237-hd_1280_720_30fps.mp4",
   credit: "Vitaliy Haiduk (Pexels)",
-  fallbackPhoto: "kick",
+  fallbackPhoto: "practice",
   label: "Top-down drone view of a football match",
 };
 
@@ -87,13 +104,13 @@ export const HERO_VIDEO = {
 export const GALLERY = [
   { photo: "imphal",  category: "Match day", caption: "Match play" },
   { photo: "teen",    category: "Players",   caption: "Youth group goalmouth drill" },
-  { photo: "kick",    category: "Training",  caption: "Overhead kick practice" },
+  { photo: "practice", category: "Training", caption: "Individual ball work" },
   { photo: "control", category: "Training",  caption: "First touch under pressure" },
-  { photo: "araku",   category: "Match day", caption: "Monsoon football, any weather" },
+  { photo: "turf",    category: "Match day", caption: "Winning the ball back" },
   { photo: "header",  category: "Players",   caption: "Ball mastery: head juggling" },
   { photo: "strike",  category: "Training",  caption: "Striking through the ball" },
   { photo: "balance", category: "Training",  caption: "Close control work" },
-  { photo: "goa",     category: "Players",   caption: "Beach football session" },
+  { photo: "kitup",   category: "Players",   caption: "Boots on, ready to train" },
 ];
 
 /* ---------------------------------------------------------------------------
@@ -118,7 +135,7 @@ export const GROUNDS = [
   {
     id: "varthur",
     name: "Varthur",
-    photo: "araku",
+    photo: "turf",
     mapQuery: "Varthur Bengaluru football ground",
     summary: "Weekday evening batches and weekend mornings.",
     sessions: [
@@ -168,7 +185,7 @@ export const PROGRAMMES = [
     focus: ["Passing and receiving", "Positional basics", "Small-sided matches"],
   },
   {
-    id: "youth", name: "Youth", ages: "U14 – U17", ageBand: [12, 18], tier: "youth", photo: "araku",
+    id: "youth", name: "Youth", ages: "U14 – U17", ageBand: [12, 18], tier: "youth", photo: "turf",
     summary: "11-a-side tactics, physical preparation and match analysis for players aiming at league and state-level football.",
     focus: ["Team tactics", "Strength and conditioning", "KSFA league exposure"],
   },
@@ -206,7 +223,7 @@ export const COACH = {
 export const PARTNERS = [
   { id: "insa",   name: "INSA Sports Academy", initials: "IN", photo: "imphal", summary: "Home ground partner. Our advanced squad trains and hosts match days at INSA.", link: "#ground-insa", linkLabel: "See the home ground" },
   { id: "yeshas", name: "Yeshas Sports",       initials: "YS", photo: "control", summary: "Partner for facilities and grassroots football programmes in the city.",      link: "#programmes",  linkLabel: "See programmes" },
-  { id: "manaa",  name: "Manaa Sports Club",   initials: "MS", photo: "araku", summary: "Club partner for fixtures, friendlies and player exposure.",                  link: "#timetable",   linkLabel: "See match days" },
+  { id: "manaa",  name: "Manaa Sports Club",   initials: "MS", photo: "turf", summary: "Club partner for fixtures, friendlies and player exposure.",                  link: "#timetable",   linkLabel: "See match days" },
 ];
 
 /* ---------------------------------------------------------------------------

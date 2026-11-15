@@ -30,7 +30,7 @@ export const galleryPage = {
       ${renderPageBanner({
         title: "On the pitch",
         intro: "Training sessions, match days and players at work on the ball.",
-        photo: "kick",
+        photo: "practice",
       })}
       <section class="section"><div class="container">
         <div class="filter-row" style="margin-bottom:22px">${filters}</div>

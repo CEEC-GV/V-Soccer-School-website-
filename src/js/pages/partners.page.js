@@ -20,7 +20,7 @@ export const partnersPage = {
         photo: "imphal",
       })}
 
-      <section class="section section--photo">${renderSectionBackground("araku")}<div class="container">${renderPartnerGrid()}</div></section>
+      <section class="section section--photo">${renderSectionBackground("turf")}<div class="container">${renderPartnerGrid()}</div></section>
 
       <section class="section section--band"><div class="container photo-band">
         <div>
@@ -28,7 +28,7 @@ export const partnersPage = {
           <p class="lede" style="margin:12px 0 24px">Clubs, schools and sponsors can work with us on facilities, fixtures and player development.</p>
           <a class="btn" href="#contact?topic=partnership">Talk to us</a>
         </div>
-        ${renderPhoto("goa", { width: 900, ratio: "4/3" })}
+        ${renderPhoto("kitup", { width: 900, ratio: "4/3" })}
       </div></section>`;
   },
 };

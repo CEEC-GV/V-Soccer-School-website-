@@ -11,7 +11,8 @@
  *   renderGroundCard      one ground with batches and actions
  *   renderPartnerGrid     partner cards
  *   renderGalleryGrid     photo grid that opens the lightbox
- *   renderContactDetails  phone / email / Instagram block
+ *   renderContactDetails  phone / email / WhatsApp / Instagram block
+ *   renderWhatsAppButton  green "Chat on WhatsApp" button (opens wa.me)
  * ============================================================================
  */
 import { BRAND, COACH, GALLERY, GROUNDS, PARTNERS, PHOTOS, PROGRAMMES } from "../config/site.config.js";
@@ -171,6 +172,17 @@ export function renderGalleryGrid(items = GALLERY) {
 }
 
 /* ---------------------------------------------------------------------------
+   WhatsApp chat button (only when BRAND.whatsapp is set)
+   text: message typed in for the visitor; they can edit it before sending
+   ------------------------------------------------------------------------ */
+export const WHATSAPP_ICON = `<svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.3 0-.4.1-.5l.4-.4.2-.4a.5.5 0 0 0 0-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>`;
+
+export function renderWhatsAppButton({ text = `Hi ${BRAND.name}, I have a question.`, label = "Chat on WhatsApp", size = "" } = {}) {
+  if (!BRAND.whatsapp) return "";
+  return `<a class="btn btn--whatsapp ${size}" href="${whatsappUrl(BRAND.whatsapp, text)}" target="_blank" rel="noopener">${WHATSAPP_ICON}${escapeHtml(label)}</a>`;
+}
+
+/* ---------------------------------------------------------------------------
    Contact details (only shows what is filled in BRAND)
    ------------------------------------------------------------------------ */
 export function renderContactDetails() {
@@ -184,6 +196,14 @@ export function renderContactDetails() {
           <a class="btn btn--sm" href="tel:${BRAND.phone.replace(/\s/g, "")}">Call</a>
           <a class="btn btn--sm btn--ghost" href="${whatsappUrl(BRAND.phone)}" target="_blank" rel="noopener">WhatsApp</a>
         </div>
+      </div>`);
+  }
+  if (BRAND.whatsapp) {
+    blocks.push(`
+      <div>
+        <p class="detail-label">Questions</p>
+        <p style="margin-top:4px">Chat with us directly on WhatsApp.</p>
+        <div class="button-row">${renderWhatsAppButton()}</div>
       </div>`);
   }
   if (BRAND.email) {

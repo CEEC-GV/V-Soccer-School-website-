@@ -34,8 +34,9 @@ jobs:
         run: npm run build
         env:
           SCHOOL_EMAIL: ${{ secrets.SCHOOL_EMAIL }}
-          SCHOOL_PHONE: ${{ secrets.SCHOOL_PHONE }}
           SCHOOL_INSTAGRAM: ${{ secrets.SCHOOL_INSTAGRAM }}
+          SCHOOL_WHATSAPP_RELAY: ${{ secrets.SCHOOL_WHATSAPP_RELAY }}
+          SCHOOL_WHATSAPP_CHAT: ${{ secrets.SCHOOL_WHATSAPP_CHAT }}
 
       - uses: actions/configure-pages@v5
 

@@ -101,6 +101,10 @@ h1, h2, h3, h4 {
 .btn--ghost { background: transparent; color: var(--color-gold-text); }
 .btn--ghost:hover { background: var(--color-gold); color: var(--color-on-gold); }
 .btn--sm { font-size: 15px; padding: 8px 14px; }
+.btn__icon { width: 1.15em; height: 1.15em; flex: none; }
+/* WhatsApp green (darker than the logo green so white text stays readable) */
+.btn--whatsapp { background: var(--color-whatsapp); border-color: var(--color-whatsapp); color: #fff; }
+.btn--whatsapp:hover { background: transparent; color: var(--color-whatsapp-text); }
 
 .text-link {
   padding: 0;

@@ -40,25 +40,37 @@ export function renderPhoto(key, { width = 1200, className = "", ratio, eager = 
 
 /* ---------------------------------------------------------------------------
    Hero background video
+   Phones get HERO_VIDEO.mobileSrc (smaller file) first, then the full one.
    The fallback photo is always drawn underneath, so if the video is skipped
-   (phone, data saver, reduced motion) or fails to load, the photo shows.
+   (data saver, reduced motion) or every file fails to load, the photo shows.
    ------------------------------------------------------------------------ */
 export function shouldPlayHeroVideo() {
-  const wideScreen = window.matchMedia("(min-width: 761px)").matches;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = navigator.connection?.saveData === true;
-  return Boolean(HERO_VIDEO.src) && wideScreen && !reducedMotion && !saveData;
+  return Boolean(HERO_VIDEO.src) && !reducedMotion && !saveData;
+}
+
+function heroVideoSources() {
+  const phone = window.matchMedia("(max-width: 760px)").matches;
+  const list = phone ? [HERO_VIDEO.mobileSrc, HERO_VIDEO.src] : [HERO_VIDEO.src];
+  return [...new Set(list.filter(Boolean))];
 }
 
 export function renderHeroMedia() {
   const photo = renderPhoto(HERO_VIDEO.fallbackPhoto, { width: 2000, eager: true });
   if (!shouldPlayHeroVideo()) return photo;
+
+  // The browser tries each <source> in order. Only when the LAST one fails
+  // is the video (and its pause button) removed, leaving the photo.
+  const sources = heroVideoSources();
+  const removeVideo = `var v=this.parentNode; v.nextElementSibling && v.nextElementSibling.remove(); v.remove()`;
+  const sourceTags = sources.map((src, index) =>
+    `<source src="${src}" type="video/mp4"${index === sources.length - 1 ? ` onerror="${removeVideo}"` : ""}>`).join("\n      ");
+
   return `
     ${photo}
-    <video class="hero__video" autoplay muted loop playsinline preload="auto" aria-label="${escapeHtml(HERO_VIDEO.label)}"
-           onerror="this.remove()">
-      <source src="${HERO_VIDEO.src}" type="video/mp4"
-              onerror="var v=this.parentNode; v.nextElementSibling && v.nextElementSibling.remove(); v.remove()">
+    <video class="hero__video" autoplay muted loop playsinline preload="auto" aria-label="${escapeHtml(HERO_VIDEO.label)}">
+      ${sourceTags}
     </video>
     <button type="button" class="hero__video-toggle" data-action="toggle-hero-video" aria-pressed="false">Pause video</button>`;
 }
@@ -85,13 +97,14 @@ export function renderPhotoStrip(keys = Object.keys(PHOTOS)) {
    Page banner (photo background, title, intro line)
    `title` may contain trusted markup from page modules; `intro` is escaped.
    ------------------------------------------------------------------------ */
-export function renderPageBanner({ title, intro = "", photo }) {
+export function renderPageBanner({ title, intro = "", photo, actions = "" }) {
   return `
     <div class="page-banner">
       ${renderPhoto(photo, { width: 1800, eager: true })}
       <div class="container page-banner__inner">
         <h1>${title}</h1>
         ${intro ? `<p class="lede">${escapeHtml(intro)}</p>` : ""}
+        ${actions ? `<div class="button-row page-banner__actions">${actions}</div>` : ""}
       </div>
     </div>`;
 }

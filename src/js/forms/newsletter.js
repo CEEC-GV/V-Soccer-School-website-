@@ -3,12 +3,15 @@
  * forms/newsletter.js
  * ----------------------------------------------------------------------------
  * Footer sign-up for fixtures, trial dates and camp updates.
- * Each new sign-up is saved on the device and emailed to the school.
+ * Each new sign-up is saved on the device and sent to the school by email
+ * and WhatsApp.
  * ============================================================================
  */
 import { BRAND } from "../config/site.config.js";
 import { celebrateGoal } from "../components/goal-celebration.js";
 import { sendEmail } from "../core/mailer.js";
+import { sendWhatsApp } from "../core/whatsapp.js";
+import { combineResults, toWhatsAppText } from "./delivery.js";
 import { Store } from "../core/store.js";
 import { isValidEmail } from "../core/validators.js";
 
@@ -41,11 +44,12 @@ export function bindNewsletterForm() {
     }
     input.value = "";
     setHint("Adding you…", "ok");
-    const result = await sendEmail({
-      subject: `${BRAND.name} · New newsletter sign-up`,
-      fields: [["Email", email], ["Signed up", new Date().toLocaleString("en-IN")]],
-      replyTo: email,
-    });
+    const subject = `${BRAND.name} · New newsletter sign-up`;
+    const fields = [["Email", email], ["Signed up", new Date().toLocaleString("en-IN")]];
+    const result = combineResults(...await Promise.all([
+      sendEmail({ subject, fields, replyTo: email }),
+      sendWhatsApp(toWhatsAppText(subject, fields)),
+    ]));
     setHint(result.ok ? "Added. We'll send fixtures and trial dates." : "Saved on this device, but we couldn't reach the school. Try again later.", result.ok ? "ok" : "error");
     if (result.ok) celebrateGoal({ title: "You're on the list", message: "We'll email trial dates, camps and match days." });
   });

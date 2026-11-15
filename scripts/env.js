@@ -2,7 +2,7 @@
  * ============================================================================
  * scripts/env.js
  * ----------------------------------------------------------------------------
- * Reads private settings (email, phone) from the .env file, which is kept out
+ * Reads private settings (email, WhatsApp relay URL) from the .env file, which is kept out
  * of Git by .gitignore, and turns them into the browser module the site
  * imports: src/js/config/env.js (also git-ignored, generated).
  *
@@ -24,8 +24,9 @@ const OUTPUT_FILE = path.join(ROOT, "src/js/config/env.js");
 
 /* Settings the site understands: .env name -> name used in the browser */
 const KEYS = {
-  SCHOOL_EMAIL: "schoolEmail",       // inbox that receives every form submission
-  SCHOOL_PHONE: "schoolPhone",       // turns on the Call / WhatsApp buttons
+  SCHOOL_EMAIL: "schoolEmail",                // inbox for submissions; also shown on the Contact page
+  SCHOOL_WHATSAPP_RELAY: "whatsappRelayUrl",  // Google Apps Script URL that WhatsApps each request
+  SCHOOL_WHATSAPP_CHAT: "whatsappChat",       // number behind the "Chat on WhatsApp" button
   SCHOOL_INSTAGRAM: "schoolInstagram",
 };
 

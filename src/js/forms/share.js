@@ -3,7 +3,7 @@
  * forms/share.js
  * ----------------------------------------------------------------------------
  * Manual ways to get a saved request to the school, used when the automatic
- * email (delivery.js) fails: WhatsApp or email (when BRAND.phone / BRAND.email
+ * email (delivery.js) fails: WhatsApp or email (when BRAND.whatsapp / BRAND.email
  * are set), or copy the details. Sending marks the record as "sent".
  * ============================================================================
  */
@@ -24,8 +24,8 @@ export function renderSendButtons(collection, record) {
   const subject = encodeURIComponent(`${BRAND.name}: ${collection === "trials" ? "trial request" : "message"}`);
   const ref = `data-collection="${collection}" data-id="${record.id}"`;
 
-  const whatsapp = BRAND.phone
-    ? `<a class="btn" href="${whatsappUrl(BRAND.phone, text)}" target="_blank" rel="noopener" data-action="mark-sent" ${ref}>Send on WhatsApp</a>`
+  const whatsapp = BRAND.whatsapp || BRAND.phone
+    ? `<a class="btn" href="${whatsappUrl(BRAND.whatsapp || BRAND.phone, text)}" target="_blank" rel="noopener" data-action="mark-sent" ${ref}>Send on WhatsApp</a>`
     : "";
   const email = BRAND.email
     ? `<a class="btn btn--ghost" href="mailto:${BRAND.email}?subject=${subject}&body=${encodeURIComponent(text)}" data-action="mark-sent" ${ref}>Send by email</a>`
@@ -52,8 +52,8 @@ async function sendRequest(collection, id) {
 
   const text = summarise(collection, record);
 
-  if (BRAND.phone) {
-    window.open(whatsappUrl(BRAND.phone, text), "_blank", "noopener");
+  if (BRAND.whatsapp || BRAND.phone) {
+    window.open(whatsappUrl(BRAND.whatsapp || BRAND.phone, text), "_blank", "noopener");
     Store.update(collection, id, { status: "sent" });
     refreshRoute();
     return;

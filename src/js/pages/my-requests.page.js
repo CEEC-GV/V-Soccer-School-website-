@@ -118,7 +118,7 @@ export const myRequestsPage = {
     const messages = Store.list("messages");
 
     return `
-      ${renderPageBanner({ title: "My requests", intro: "Trial bookings and messages sent from this device.", photo: "goa" })}
+      ${renderPageBanner({ title: "My requests", intro: "Trial bookings and messages sent from this device.", photo: "kitup" })}
 
       <!-- Trials -->
       <section class="section"><div class="container">

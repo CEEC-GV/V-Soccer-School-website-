@@ -3,18 +3,21 @@
  * forms/contact-form.js
  * ----------------------------------------------------------------------------
  * "Talk to the school" form on the Contact screen.
- * Validates as the visitor types, saves to Store, emails the school
- * automatically, and shows send buttons only if that email fails.
+ * Validates as the visitor types and saves to Store. When BRAND.whatsapp is
+ * set, sending opens a WhatsApp chat with the school with the details
+ * already typed in (the visitor just taps Send); a copy is also emailed.
+ * Without a WhatsApp number it only emails, with send buttons as a fallback.
  * ============================================================================
  */
-import { GROUNDS } from "../config/site.config.js";
-import { escapeHtml, scrollToElement, setFieldHint, showToast } from "../core/dom.js";
+import { BRAND, GROUNDS, findGround } from "../config/site.config.js";
+import { escapeHtml, scrollToElement, setFieldHint, showToast, whatsappUrl } from "../core/dom.js";
 import { Store } from "../core/store.js";
 import { isValidEmail, isValidPhone, normalisePhone } from "../core/validators.js";
 import { celebrateGoal } from "../components/goal-celebration.js";
+import { WHATSAPP_ICON, renderWhatsAppButton } from "../components/cards.js";
 import { applyDeliveryResult, deliverRecord, renderDeliveryStatus } from "./delivery.js";
 import { renderSendButtons } from "./share.js";
-import { CONTACT_TOPICS, summariseMessage } from "./summaries.js";
+import { CONTACT_TOPICS, summariseMessage, topicLabel } from "./summaries.js";
 
 const MESSAGE_LIMIT = 600;
 const MESSAGE_MIN = 10;
@@ -67,20 +70,49 @@ export function renderContactForm(topic = "general") {
       <input class="honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <div class="button-row" style="margin-top:22px">
-        <button class="btn" type="submit">Send message</button>
+        ${BRAND.whatsapp
+          ? `<button class="btn btn--whatsapp" type="submit">${WHATSAPP_ICON}Send on WhatsApp</button>`
+          : `<button class="btn" type="submit">Send message</button>`}
         <span class="field-hint" id="contact-form-status"></span>
       </div>
     </form>`;
 }
 
 /* ---------------------------------------------------------------------------
+   WhatsApp message typed in for the visitor (they can edit it before sending)
+   ------------------------------------------------------------------------ */
+function whatsappMessage(message) {
+  const lines = [`Hi ${BRAND.name}, I'm ${message.name}.`, "", message.message, ""];
+  lines.push(`Topic: ${topicLabel(message.topic)}`);
+  const ground = findGround(message.ground);
+  if (ground) lines.push(`Ground: ${ground.name}`);
+  lines.push(`Mobile: ${message.phone}`);
+  if (message.email) lines.push(`Email: ${message.email}`);
+  return lines.join("\n");
+}
+
+/* ---------------------------------------------------------------------------
    Confirmation
    ------------------------------------------------------------------------ */
 function renderContactConfirmation(message) {
+  const firstName = escapeHtml(message.name.split(" ")[0]);
+  if (BRAND.whatsapp) {
+    return `
+    <div class="confirmation">
+      <h3>Thanks, ${firstName}. Now tap Send in WhatsApp</h3>
+      <p>WhatsApp has opened with your details typed in. If it didn't open, use the button below.</p>
+      <pre>${escapeHtml(whatsappMessage(message))}</pre>
+      <div class="button-row">${renderWhatsAppButton({ text: whatsappMessage(message), label: "Open WhatsApp again" })}</div>
+      <div class="button-row">
+        <a class="text-link" href="#my-requests">View my requests</a>
+        <a class="text-link" href="#contact">Send another message</a>
+      </div>
+    </div>`;
+  }
   return `
     <div class="confirmation">
       <p data-delivery>${renderDeliveryStatus("sending")}</p>
-      <h3>Thanks, ${escapeHtml(message.name.split(" ")[0])}</h3>
+      <h3>Thanks, ${firstName}</h3>
       <pre>${escapeHtml(summariseMessage(message))}</pre>
       <div class="button-row" data-fallback hidden>${renderSendButtons("messages", message)}</div>
       <div class="button-row">
@@ -136,14 +168,23 @@ export function bindContactForm() {
     });
 
     const container = document.getElementById("contact-form-container");
+
+    // WhatsApp first: open the chat right away (inside the click, so browsers allow it)
+    if (BRAND.whatsapp && !values._honey) {
+      const chat = window.open(whatsappUrl(BRAND.whatsapp, whatsappMessage(saved)), "_blank");
+      if (chat) chat.opener = null;
+      else showToast("Tap Open WhatsApp again to send your message");
+    }
+
     container.innerHTML = renderContactConfirmation(saved);
     scrollToElement(container);
 
-    celebrateGoal({ title: "Message sent", message: "A coach will get back to you soon." });
+    if (!BRAND.whatsapp) celebrateGoal({ title: "Message sent", message: "A coach will get back to you soon." });
 
+    // A copy also goes to the school's email (and WhatsApp relay, if set up)
     deliverRecord("messages", saved, "new", values._honey).then((result) => {
       applyDeliveryResult(container, result);
-      if (!result.ok) showToast("Saved. Send it with a button below");   // success is shown by the player pop-up
+      if (!result.ok && !BRAND.whatsapp) showToast("Saved. Send it with a button below");   // success is shown by the player pop-up
     });
   });
 }

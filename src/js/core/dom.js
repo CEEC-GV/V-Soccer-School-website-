@@ -26,7 +26,8 @@ export function mapsUrl(query) {
 }
 
 export function whatsappUrl(phone, text = "") {
-  const digits = String(phone).replace(/\D/g, "");
+  let digits = String(phone).replace(/\D/g, "");
+  if (digits.length === 10) digits = `91${digits}`;   // assume India
   return `https://wa.me/${digits}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 }
 

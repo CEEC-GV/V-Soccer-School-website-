@@ -18,7 +18,7 @@ export const aboutPage = {
       ${renderPageBanner({
         title: "One school, four grounds, one way of playing",
         intro: "V Soccer School is a Bengaluru football school for boys and girls aged 5 to 17.",
-        photo: "araku",
+        photo: "turf",
       })}
 
       <!-- Story and facts -->

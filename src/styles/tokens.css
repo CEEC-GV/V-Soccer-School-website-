@@ -20,6 +20,8 @@
 
   /* ---- Brand (from the crest) ---- */
   --color-gold: #E3B13B;          /* fills, borders, buttons */
+  --color-whatsapp: #128C4A;      /* WhatsApp button */
+  --color-whatsapp-text: #0E7A40; /* WhatsApp button text on hover */
   --color-gold-text: #8C620E;     /* gold dark enough to read on white */
   --color-gold-soft: #CDA54C;
   --color-on-gold: #0A0A09;       /* text placed on a gold fill */
@@ -49,6 +51,7 @@
 
 /* ---- Dark theme (toggled from the header) ---- */
 :root[data-theme-mode="dark"] {
+  --color-whatsapp-text: #3DDC84;
   --color-bg: #0A0A09;
   --color-band: #0E1712;
   --color-panel: #141412;

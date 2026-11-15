@@ -23,7 +23,7 @@ export const bookTrialPage = {
       ${renderPageBanner({
         title: existing ? "Edit trial request" : "Book a free trial",
         intro: "Fill this in and your child joins a normal batch for one session.",
-        photo: "kick",
+        photo: "practice",
       })}
 
       <section class="section"><div class="container form-layout">
