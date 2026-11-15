@@ -1,0 +1,326 @@
+/* ==========================================================================
+   layout.css
+   Site chrome that appears on every screen:
+   1. Header (brand, clock, theme toggle, requests, book button)
+   2. Main navigation bar
+   3. Ground tabs (live status of each ground)
+   4. Footer
+   5. Floating controls (toast, back-to-top)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Header
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: var(--color-header);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-line);
+}
+.site-header__bar { display: flex; align-items: center; gap: 18px; min-height: 64px; }
+.site-header__actions { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; }
+.brand__text { min-width: 0; }
+.brand__logo { width: 44px; height: 44px; flex: none; }
+.brand__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+.brand__city {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-gold-text);
+}
+
+.header-clock { font-family: var(--font-body); font-size: 12px; color: var(--color-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.theme-toggle {
+  padding: 6px 10px;
+  border: 1px solid var(--color-line);
+  background: none;
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  font-size: 11px;
+  cursor: pointer;
+}
+.theme-toggle { white-space: nowrap; }
+.theme-toggle:hover { color: var(--color-text); border-color: var(--color-text); }
+
+.requests-link {
+  padding: 6px 4px;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap; font-weight: 400; }
+.requests-link[aria-current="page"] { color: var(--color-gold-text); }
+.requests-link__badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--color-gold);
+  color: var(--color-on-gold);
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+/* Menu button (phones only) */
+.menu-toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-text);
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.menu-toggle[aria-expanded="true"] { background: var(--color-text); color: var(--color-bg); }
+
+/* Breakpoints used in this file:
+   1100px  nav bar -> Menu button, ground tabs -> 4 equal columns
+    760px  phones: book button and theme toggle move into the menu, tabs 2 x 2
+    420px  narrow phones: "My requests" moves into the menu */
+@media (max-width: 1100px) {
+  .menu-toggle { display: inline-flex; }
+  .site-header__actions .theme-toggle { display: none; }   /* moves into the menu */
+}
+@media (max-width: 760px) {
+  .header-clock, .site-header__actions .btn, .site-header__actions .theme-toggle { display: none; }
+  .site-header__bar { gap: 12px; }
+  .site-header__actions { gap: 10px; flex: none; }
+  .brand__name { font-size: 18px; }
+  .requests-link { font-size: 14px; }
+}
+@media (max-width: 420px) {
+  /* Narrow phones: "My requests" moves into the menu so the school name fits */
+  .site-header__actions .requests-link, .brand__city { display: none; }
+  .brand__name { font-size: 18px; }
+}
+@media (max-width: 380px) {
+  .brand { gap: 8px; }
+  .brand__name { font-size: 16px; letter-spacing: 0.02em; }
+  .brand__logo { width: 38px; height: 38px; }
+}
+@media (max-width: 340px) {
+  .brand__name { font-size: 14px; }
+}
+/* Tablets: the clock is dropped so the header actions fit */
+@media (max-width: 1000px) {
+  .header-clock { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   2. Main navigation bar
+   -------------------------------------------------------------------------- */
+.main-nav { border-top: 1px solid var(--color-line); }
+.main-nav__list { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.main-nav__list::-webkit-scrollbar { display: none; }
+.main-nav__link {
+  flex: none;
+  padding: 10px 12px;
+  border-bottom: 3px solid transparent;
+  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.main-nav__link:first-child { padding-left: 0; }
+.main-nav__link:hover { color: var(--color-text); }
+.main-nav__link[aria-current="page"] { color: var(--color-gold-text); border-bottom-color: var(--color-gold); }
+.main-nav__extras { display: none; }
+.main-nav__extras .requests-link { font-size: 17px; }
+
+/* Tablets and phones: the bar becomes a drop-down list opened by the Menu button */
+@media (max-width: 1100px) {
+  .main-nav { display: none; max-height: calc(100dvh - 64px); overflow-y: auto; background: var(--color-panel); }
+  .main-nav--open { display: block; }
+  .main-nav__list { flex-direction: column; gap: 0; overflow: visible; }
+  .main-nav__link { padding: 14px 0; border-bottom: 1px solid var(--color-line); font-size: 19px; }
+  .main-nav__link[aria-current="page"] { border-bottom-color: var(--color-line); }
+  .main-nav__list { padding-bottom: 8px; }
+  .main-nav__extras { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-block: 16px 20px; }
+  /* Tablets keep these in the header, so the menu shows only the theme toggle */
+  .main-nav__extras .btn, .main-nav__extras .requests-link { display: none; }
+}
+/* Phones only: book button, My requests and theme toggle live in the menu */
+@media (max-width: 760px) {
+  .main-nav__extras .btn, .main-nav__extras .requests-link { display: inline-flex; }
+}
+
+/* --------------------------------------------------------------------------
+   3. Ground tabs
+   One tab per ground. Each shows live status and opens that ground's page.
+   -------------------------------------------------------------------------- */
+.ground-tabs { background: var(--color-panel-2); border-bottom: 1px solid var(--color-line); }
+.ground-tabs__row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding-block: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ground-tabs__row::-webkit-scrollbar { display: none; }
+.ground-tabs__label {
+  flex: none;
+  align-self: center;
+  padding-right: 6px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.ground-tab {
+  flex: 1 0 210px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  background: var(--color-panel);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ground-tab:hover { border-color: var(--color-gold); }
+.ground-tab[aria-current="page"] { border-color: var(--color-gold); box-shadow: inset 0 -3px 0 var(--color-gold); }
+.ground-tab--live { border-color: var(--color-live); }
+.ground-tab__text { display: flex; flex-direction: column; min-width: 0; }
+.ground-tab__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ground-tab__meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ground-tab--live .ground-tab__meta { color: var(--color-live); }
+
+/* Tablets: four equal tabs on one row. Phones: a 2 x 2 grid. Never scrolls sideways. */
+@media (max-width: 1100px) {
+  .ground-tabs__row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; }
+  .ground-tabs__label { display: none; }
+  .ground-tab { min-width: 0; padding: 8px 12px; }
+  .ground-tab__meta { overflow: hidden; text-overflow: ellipsis; }
+}
+@media (max-width: 760px) {
+  .ground-tabs__row { grid-template-columns: 1fr 1fr; gap: 6px; padding-block: 8px; }
+  .ground-tab { min-width: 0; gap: 8px; padding: 7px 10px; }
+  .ground-tab__name { font-size: 14px; }
+  .ground-tab__meta { font-size: 10px; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* Status dot used in tabs, cards and the timetable */
+.status-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; background: var(--color-muted); }
+.status-dot--live { background: var(--color-live); animation: live-pulse 1.8s infinite; }
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(30, 138, 85, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(30, 138, 85, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(30, 138, 85, 0); }
+}
+
+/* --------------------------------------------------------------------------
+   4. Footer
+   -------------------------------------------------------------------------- */
+.site-footer { border-top: 1px solid var(--color-line); background: var(--color-band); padding-block: 48px 32px; }
+.site-footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; }
+.site-footer h4 { font-size: 18px; color: var(--color-gold-text); margin-bottom: 12px; letter-spacing: 0.08em; }
+.site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 14px; color: var(--color-muted); }
+.site-footer a { text-decoration: none; }
+.site-footer a:hover { color: var(--color-gold-text); }
+.site-footer .brand__logo { width: 60px; height: 60px; }
+.site-footer__legal {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.site-footer__legal a { color: var(--color-muted); }
+@media (max-width: 900px) { .site-footer__grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .site-footer__grid { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------------------
+   5. Floating controls
+   -------------------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  max-width: calc(100% - 32px);
+  padding: 10px 18px;
+  background: var(--color-gold);
+  color: var(--color-on-gold);
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  transition: 0.25s;
+  pointer-events: none; font-weight: 400; }
+.toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.back-to-top {
+  position: fixed;
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-gold);
+  background: var(--color-panel);
+  color: var(--color-gold-text);
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.back-to-top--visible { opacity: 1; pointer-events: auto; }

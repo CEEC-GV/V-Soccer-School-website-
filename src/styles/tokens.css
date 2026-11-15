@@ -1,0 +1,70 @@
+/* ==========================================================================
+   tokens.css
+   Design tokens: every colour, font and size the site uses lives here.
+   Change the brand in one place and every screen follows.
+   Light theme is the default. Dark theme applies when <html data-theme-mode="dark">.
+   ========================================================================== */
+
+:root {
+  /* ---- Surfaces ---- */
+  --color-bg: #F6F6F2;            /* page background */
+  --color-band: #EDF2EC;          /* alternate section band, faint pitch green */
+  --color-panel: #FFFFFF;         /* cards, forms, tables */
+  --color-panel-2: #F1EFE8;       /* hover / secondary panel */
+  --color-line: #DDD9CE;          /* borders and dividers */
+  --color-header: rgba(255, 255, 255, 0.94);
+
+  /* ---- Text ---- */
+  --color-text: #17160F;
+  --color-muted: #5D594E;
+
+  /* ---- Brand (from the crest) ---- */
+  --color-gold: #E3B13B;          /* fills, borders, buttons */
+  --color-gold-text: #8C620E;     /* gold dark enough to read on white */
+  --color-gold-soft: #CDA54C;
+  --color-on-gold: #0A0A09;       /* text placed on a gold fill */
+
+  /* ---- Status ---- */
+  --color-live: #1E8A55;
+  --color-warn: #B4531B;
+
+  /* ---- Photo banners and placeholders ---- */
+  --fade-strong: rgba(246, 246, 242, 0.94);   /* behind the headline */
+  --fade-mid: rgba(246, 246, 242, 0.62);
+  --fade-soft: rgba(246, 246, 242, 0);         /* right side: photo at full strength */
+  --placeholder-a: #E2EBE1;
+  --placeholder-b: #D9E4D8;
+
+  /* ---- Typography ---- */
+  --font-display: "Bebas Neue", "Oswald", "Arial Narrow", Impact, sans-serif;   /* one weight only (400) */
+  --font-body: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- Layout ---- */
+  --page-width: 1180px;
+  --gutter: 20px;
+  --section-space: 72px;
+
+  color-scheme: light;
+}
+
+/* ---- Dark theme (toggled from the header) ---- */
+:root[data-theme-mode="dark"] {
+  --color-bg: #0A0A09;
+  --color-band: #0E1712;
+  --color-panel: #141412;
+  --color-panel-2: #1B1A17;
+  --color-line: #2A2822;
+  --color-header: rgba(10, 10, 9, 0.95);
+  --color-text: #EDE9DD;
+  --color-muted: #A29D8F;
+  --color-gold-text: #E3B13B;
+  --color-gold-soft: #9C7A2B;
+  --color-live: #52C98C;
+  --color-warn: #E0894A;
+  --fade-strong: rgba(10, 10, 9, 0.9);
+  --fade-mid: rgba(10, 10, 9, 0.55);
+  --fade-soft: rgba(10, 10, 9, 0);
+  --placeholder-a: #10201A;
+  --placeholder-b: #0D1A14;
+  color-scheme: dark;
+}

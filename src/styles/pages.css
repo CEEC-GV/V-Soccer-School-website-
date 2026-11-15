@@ -1,0 +1,205 @@
+/* ==========================================================================
+   pages.css
+   Styles that belong to one screen only:
+   1. Home: hero, next-session board
+   2. Coach: profile layout and honours list
+   3. About: split layout, facts, photo collage
+   4. Ground detail
+   5. Timetable
+   6. Gallery
+   7. My requests
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Home
+   -------------------------------------------------------------------------- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--color-line); }
+.hero > .photo { position: absolute; inset: 0; aspect-ratio: auto; height: 100%; }
+/* Match-day video plays over the fallback photo */
+.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero__video-toggle {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: 16px;
+  z-index: 2;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(10, 10, 9, 0.6);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hero__video-toggle:hover { background: rgba(10, 10, 9, 0.85); }
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, var(--fade-strong) 0%, var(--fade-mid) 40%, var(--fade-soft) 68%);
+}
+.hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 40px; align-items: center; padding-block: 72px 80px; }
+.hero h1 { margin-top: 14px; font-size: clamp(56px, 9.5vw, 120px); font-weight: 400; line-height: 0.9; }
+.hero h1 em { font-style: normal; color: var(--color-gold-text); }
+.hero .lede { margin-top: 22px; }
+.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.hero__crest { justify-self: end; width: min(100%, 300px); aspect-ratio: 1; }
+.hero__crest img { width: 100%; height: 100%; filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.35)); }
+.hero__note { margin-top: 26px; font-size: 15px; color: var(--color-muted); }
+@media (max-width: 820px) {
+  /* Phones and small tablets: full-strength photo on top, text below */
+  .hero > .photo { position: relative; aspect-ratio: 16 / 10; height: auto; }
+  .hero::after { display: none; }
+  .hero__grid { grid-template-columns: 1fr; gap: 20px; padding-block: 28px 44px; }
+  .hero__crest { display: none; }   /* the crest is already in the header */
+  .hero__actions .btn { flex: 1 1 200px; }
+  .hero__note { margin-top: 20px; }
+}
+
+/* Next-session board */
+.session-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); border: 1px solid var(--color-line); background: var(--color-panel); }
+.session-board__item { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 22px 24px; border-right: 1px solid var(--color-line); text-decoration: none; transition: background 0.15s; }
+.session-board__item:hover { background: var(--color-panel-2); }
+.session-board__item:last-child { border-right: 0; }
+.session-board__item h3 { font-size: 26px; }
+.session-board__count { font-family: var(--font-display); font-size: 40px; font-weight: 400; line-height: 1; color: var(--color-gold-text); font-variant-numeric: tabular-nums; }
+.session-board__count small { font-size: 18px; }
+@media (max-width: 820px) {
+  .session-board__item { border-right: 0; border-bottom: 1px solid var(--color-line); }
+  .session-board__item:last-child { border-bottom: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   2. Coach
+   -------------------------------------------------------------------------- */
+.coach-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: start; }
+.coach-layout h2 { font-size: clamp(34px, 5vw, 52px); margin: 10px 0 20px; }
+.honours { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--color-line); }
+.honours li { display: grid; grid-template-columns: 160px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--color-line); }
+.honours__label { font-family: var(--font-body); font-size: 12px; color: var(--color-gold-text); }
+.honours__value { font-size: 17px; }
+@media (max-width: 860px) {
+  .coach-layout { grid-template-columns: 1fr; gap: 32px; }
+  .honours li { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* --------------------------------------------------------------------------
+   3. About
+   -------------------------------------------------------------------------- */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.split p + p { margin-top: 16px; }
+.fact-grid { display: grid; grid-template-columns: 1fr 1fr; margin-top: 28px; border-top: 1px solid var(--color-line); }
+.fact-grid div { padding: 18px 0; border-bottom: 1px solid var(--color-line); }
+.fact-grid div:nth-child(odd) { padding-right: 16px; }
+.fact-grid b { display: block; font-family: var(--font-display); font-size: 30px; line-height: 1.05; color: var(--color-gold-text); font-weight: 400; }
+.fact-grid span { font-size: 13px; color: var(--color-muted); }
+.collage { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+.collage .photo:first-child { grid-row: span 2; aspect-ratio: auto; min-height: 100%; }
+@media (max-width: 820px) { .split { grid-template-columns: 1fr; gap: 32px; } }
+
+/* --------------------------------------------------------------------------
+   4. Ground detail
+   -------------------------------------------------------------------------- */
+.ground-detail .session-list { font-size: 16px; gap: 12px; }
+.ground-detail .session-list li { grid-template-columns: 130px 1fr; }
+
+/* --------------------------------------------------------------------------
+   5. Timetable
+   -------------------------------------------------------------------------- */
+.filter-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter-chip {
+  padding: 7px 14px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer; font-weight: 400; }
+.filter-chip:hover { color: var(--color-text); }
+@media (max-width: 760px) { .filter-chip { font-size: 14px; padding: 6px 10px; } }
+.filter-chip[aria-pressed="true"] { border-color: var(--color-gold); background: var(--color-gold); color: var(--color-on-gold); }
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--color-line); }
+.week-table { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 13px; }
+.week-table th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.week-table th.is-today { color: var(--color-gold-text); box-shadow: inset 0 -2px 0 var(--color-gold); }
+.week-table td { width: 14.28%; padding: 10px; vertical-align: top; border-right: 1px solid var(--color-line); }
+.week-table td:last-child { border-right: 0; }
+.week-table td.is-today { background: rgba(227, 177, 59, 0.06); }
+.week-table__rest { font-family: var(--font-body); font-size: 12px; color: var(--color-muted); }
+
+.slot-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  background: var(--color-panel);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.slot-button:hover { border-color: var(--color-gold); }
+.slot-button.is-live { border-color: var(--color-live); background: rgba(30, 138, 85, 0.07); }
+.slot-button.is-done { opacity: 0.45; }
+.slot-button b { display: block; font-family: var(--font-display); font-size: 16px; letter-spacing: 0.03em; text-transform: uppercase; font-weight: 400; }
+.slot-button span { display: block; color: var(--color-muted); }
+.slot-button em { display: block; margin-top: 4px; font-style: normal; font-size: 13px; font-weight: 600; color: var(--color-gold-text); }
+
+/* --------------------------------------------------------------------------
+   6. Gallery
+   -------------------------------------------------------------------------- */
+.gallery { columns: 3 280px; column-gap: 14px; }
+.gallery__item { display: block; width: 100%; margin: 0 0 14px; padding: 0; border: 0; background: none; color: inherit; text-align: left; break-inside: avoid; cursor: zoom-in; }
+.gallery__caption { padding: 8px 2px 0; font-size: 13px; color: var(--color-muted); }
+@media (max-width: 600px) {
+  .gallery { columns: 2; column-gap: 10px; }
+  .gallery__item { margin-bottom: 10px; }
+  .gallery__caption { font-size: 12px; }
+}
+
+/* --------------------------------------------------------------------------
+   7. My requests
+   -------------------------------------------------------------------------- */
+.request-list { display: grid; gap: 14px; }
+.request-card { display: grid; grid-template-columns: 1fr auto; gap: 12px 24px; align-items: start; padding: 20px 22px; border: 1px solid var(--color-line); background: var(--color-panel); }
+.request-card h3 { margin-top: 10px; font-size: 26px; }
+.request-card__meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-family: var(--font-body); font-size: 12px; color: var(--color-muted); }
+.request-card__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.request-card__confirm { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 12px; border-top: 1px solid var(--color-line); color: var(--color-warn); font-size: 14px; }
+.pill { display: inline-block; padding: 3px 10px; border: 1px solid currentColor; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.pill--new { color: var(--color-gold-text); }
+.pill--sent { color: var(--color-live); }
+.pill--cancelled { color: var(--color-muted); }
+/* Phones: timetable becomes a day-by-day list (see renderWeekList) */
+.week-list { display: none; }
+.week-list__day h3 { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--color-line); font-size: 24px; }
+.week-list__day h3 small { font-family: var(--font-body); font-size: 11px; color: var(--color-gold-text); }
+.week-list__day.is-today h3 { border-bottom-color: var(--color-gold); }
+@media (max-width: 760px) {
+  .table-scroll { display: none; }
+  .week-list { display: grid; gap: 24px; }
+}
+
+.empty-state { display: grid; justify-items: center; gap: 14px; padding: 40px 24px; border: 1px dashed var(--color-line); text-align: center; color: var(--color-muted); }
+@media (max-width: 640px) {
+  .request-card { grid-template-columns: 1fr; }
+  .request-card__actions { justify-content: flex-start; }
+}
