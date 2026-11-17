@@ -1,0 +1,111 @@
+# ============================================================================
+# CI/CD: build, check and deploy to GitHub Pages
+# ----------------------------------------------------------------------------
+#   Pull request to main  -> build + checks only (nothing goes live)
+#   Push to main          -> build + checks, then deploy to GitHub Pages
+#   Run workflow button   -> same as a push (use after changing a secret)
+#
+# Private settings come from repository secrets, so .env never goes to Git.
+# A failed check (broken link, missing title, bad schema, ...) stops the
+# deploy and the live site stays as it was.
+# ============================================================================
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer run on the same branch replaces an older one still in progress
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # --------------------------------------------------------------------------
+  # CI: build the site and check it
+  # --------------------------------------------------------------------------
+  build:
+    name: Build and check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install build tools (esbuild, Playwright)
+        run: npm ci
+
+      # Headless Chromium pre-renders every page; cached between runs
+      - name: Cache Playwright browser
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install headless Chromium for pre-rendering
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Chromium system libraries
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # Downloaded photos are cached too, so they aren't fetched on every run
+      - name: Cache photos
+        uses: actions/cache@v4
+        with:
+          path: .cache/photos
+          key: photos-${{ hashFiles('src/js/config/site.config.js') }}
+          restore-keys: photos-
+
+      - name: Build site
+        run: npm run build
+        env:
+          SCHOOL_EMAIL: ${{ secrets.SCHOOL_EMAIL }}
+          SCHOOL_INSTAGRAM: ${{ secrets.SCHOOL_INSTAGRAM }}
+          SCHOOL_WHATSAPP_RELAY: ${{ secrets.SCHOOL_WHATSAPP_RELAY }}
+          SCHOOL_WHATSAPP_CHAT: ${{ secrets.SCHOOL_WHATSAPP_CHAT }}
+          SITE_URL: ${{ vars.SITE_URL }}
+
+      - name: Check pages, links and SEO tags
+        run: npm run check
+
+      - name: Package site for GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  # --------------------------------------------------------------------------
+  # CD: publish to GitHub Pages (main branch only, after checks pass)
+  # --------------------------------------------------------------------------
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

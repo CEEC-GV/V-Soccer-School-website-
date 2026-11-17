@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/my-requests.page.js  ->  #my-requests
+ * pages/my-requests.page.js  ->  /my-requests/
  * ----------------------------------------------------------------------------
  * Lists trial requests and messages saved on this device.
  * Trial actions: Send, Edit, Cancel (with confirm), Restore, Delete.
@@ -34,7 +34,7 @@ function renderTrialCard(trial) {
     ? `<button type="button" class="btn btn--sm btn--ghost" data-action="restore-trial" ${ref}>Restore</button>
        <button type="button" class="btn btn--sm btn--ghost" data-action="ask-delete" ${ref}>Delete</button>`
     : `<button type="button" class="btn btn--sm" data-action="send-request" ${ref}>Send</button>
-       <a class="btn btn--sm btn--ghost" href="#book-trial?edit=${trial.id}">Edit</a>
+       <a class="btn btn--sm btn--ghost" href="/book-trial/?edit=${trial.id}">Edit</a>
        <button type="button" class="btn btn--sm btn--ghost" data-action="ask-cancel" ${ref}>Cancel</button>`;
 
   return `
@@ -124,18 +124,18 @@ export const myRequestsPage = {
       <section class="section"><div class="container">
         <div class="section-head">
           <div><h2 style="font-size:40px">${plural(trials.length, "trial request")}</h2></div>
-          <a class="btn" href="#book-trial">New trial request</a>
+          <a class="btn" href="/book-trial/">New trial request</a>
         </div>
         ${trials.length
           ? `<div class="request-list">${trials.map(renderTrialCard).join("")}</div>`
-          : `<div class="empty-state"><p>No trial requests yet. Book one and it will appear here so you can edit or cancel it.</p><a class="btn btn--ghost" href="#book-trial">Book a free trial</a></div>`}
+          : `<div class="empty-state"><p>No trial requests yet. Book one and it will appear here so you can edit or cancel it.</p><a class="btn btn--ghost" href="/book-trial/">Book a free trial</a></div>`}
       </div></section>
 
       <!-- Messages -->
       <section class="section"><div class="container">
         <div class="section-head">
           <div><h2 style="font-size:40px">${plural(messages.length, "message")}</h2></div>
-          <a class="btn btn--ghost" href="#contact">Send a message</a>
+          <a class="btn btn--ghost" href="/contact/">Send a message</a>
         </div>
         ${messages.length
           ? `<div class="request-list">${messages.map(renderMessageCard).join("")}</div>`

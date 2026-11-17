@@ -23,7 +23,7 @@ export function renderGroundTabs(activeGroundId = "") {
       : `In ${formatDuration(startsIn)} · ${DAY_SHORT[next.day]} ${formatTime12(next.start)}`;
 
     return `
-      <a class="ground-tab ${live ? "ground-tab--live" : ""}" href="#ground-${ground.id}"
+      <a class="ground-tab ${live ? "ground-tab--live" : ""}" href="/grounds/${ground.id}/"
          aria-current="${isActive ? "page" : "false"}"
          aria-label="${escapeHtml(ground.name)}: ${escapeHtml(meta)}">
         <i class="status-dot ${live ? "status-dot--live" : ""}" aria-hidden="true"></i>

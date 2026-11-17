@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/contact.page.js  ->  #contact   (optional ?topic=<id>)
+ * pages/contact.page.js  ->  /contact/   (optional ?topic=<id>)
  * ----------------------------------------------------------------------------
  * Contact form, direct contact details and FAQ.
  * WhatsApp comes first when BRAND.whatsapp is set: a chat button in the
@@ -37,7 +37,7 @@ export const contactPage = {
             <h3>Reach us directly</h3>
             ${renderContactDetails() || `<p>Use the form and we will get back to you.</p>`}
             <p>Trial bookings go faster through the trial form.</p>
-            <a class="btn btn--ghost" href="#book-trial">Book a free trial</a>
+            <a class="btn btn--ghost" href="/book-trial/">Book a free trial</a>
           </div>
         </aside>
       </div></section>

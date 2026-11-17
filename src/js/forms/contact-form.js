@@ -104,8 +104,8 @@ function renderContactConfirmation(message) {
       <pre>${escapeHtml(whatsappMessage(message))}</pre>
       <div class="button-row">${renderWhatsAppButton({ text: whatsappMessage(message), label: "Open WhatsApp again" })}</div>
       <div class="button-row">
-        <a class="text-link" href="#my-requests">View my requests</a>
-        <a class="text-link" href="#contact">Send another message</a>
+        <a class="text-link" href="/my-requests/">View my requests</a>
+        <a class="text-link" href="/contact/">Send another message</a>
       </div>
     </div>`;
   }
@@ -116,8 +116,8 @@ function renderContactConfirmation(message) {
       <pre>${escapeHtml(summariseMessage(message))}</pre>
       <div class="button-row" data-fallback hidden>${renderSendButtons("messages", message)}</div>
       <div class="button-row">
-        <a class="text-link" href="#my-requests">View my requests</a>
-        <a class="text-link" href="#contact">Send another message</a>
+        <a class="text-link" href="/my-requests/">View my requests</a>
+        <a class="text-link" href="/contact/">Send another message</a>
       </div>
     </div>`;
 }

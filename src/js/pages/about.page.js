@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/about.page.js  ->  #about
+ * pages/about.page.js  ->  /about/
  * ----------------------------------------------------------------------------
  * Sections: banner, school story with key facts, home ground.
  * ============================================================================
@@ -34,8 +34,8 @@ export const aboutPage = {
             <div><b>KSFA</b><span>League coaching experience</span></div>
           </div>
           <div class="button-row" style="margin-top:24px">
-            <a class="btn" href="#branches">Find a ground</a>
-            <a class="btn btn--ghost" href="#coach">Meet the coach</a>
+            <a class="btn" href="/branches/">Find a ground</a>
+            <a class="btn btn--ghost" href="/coach/">Meet the coach</a>
           </div>
         </div>
         <div class="collage">
@@ -51,7 +51,7 @@ export const aboutPage = {
         <div class="split">
           <div>
             <p class="lede">INSA Sports Academy is where V Soccer School is based. The advanced squad trains here twice a week and Saturday match days are played here, so every player in the school gets regular game time on a full-size pitch.</p>
-            <div class="button-row" style="margin-top:22px"><a class="btn btn--ghost" href="#ground-insa">Home ground details</a></div>
+            <div class="button-row" style="margin-top:22px"><a class="btn btn--ghost" href="/grounds/insa/">Home ground details</a></div>
           </div>
           <div>${renderGroundCard(findGround("insa"))}</div>
         </div>

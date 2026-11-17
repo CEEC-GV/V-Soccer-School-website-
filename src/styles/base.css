@@ -25,7 +25,8 @@ body::before {
   z-index: 60;
   background: var(--color-bg);
 }
-img { max-width: 100%; }
+img { max-width: 100%; height: auto; }
+b, strong { font-weight: 600; }   /* only 400 and 600 are loaded */
 a { color: inherit; }
 p { margin: 0; }
 [hidden] { display: none !important; }

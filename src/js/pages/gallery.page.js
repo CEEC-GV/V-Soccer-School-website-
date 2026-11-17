@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/gallery.page.js  ->  #gallery   (optional ?category=<name>)
+ * pages/gallery.page.js  ->  /gallery/   (optional ?category=<name>)
  * ----------------------------------------------------------------------------
  * Photo grid with category filters. Photos open in the lightbox.
  * ============================================================================
@@ -9,7 +9,7 @@ import { GALLERY } from "../config/site.config.js";
 import { renderGalleryGrid } from "../components/cards.js";
 import { renderPageBanner } from "../components/media.js";
 import { escapeHtml } from "../core/dom.js";
-import { buildHash } from "../core/router.js";
+import { urlFor } from "../core/router.js";
 
 const ALL = "All";
 
@@ -23,7 +23,7 @@ export const galleryPage = {
     const items = GALLERY.filter((item) => active === ALL || item.category === active);
 
     const filters = categories.map((category) => `
-      <a class="filter-chip" href="${buildHash("gallery", { category: category === ALL ? "" : category })}"
+      <a class="filter-chip" href="${urlFor("gallery", { category: category === ALL ? "" : category })}"
          aria-pressed="${category === active}">${escapeHtml(category)}</a>`).join("");
 
     return `

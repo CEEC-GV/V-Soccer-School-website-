@@ -1,0 +1,16 @@
+# Keeps the build tools (esbuild, Playwright) and GitHub Actions up to date.
+# Dependabot opens one pull request a month; the CI/CD workflow builds and
+# checks it before anyone merges.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      build-tools:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

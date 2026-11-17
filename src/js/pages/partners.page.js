@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/partners.page.js  ->  #partners
+ * pages/partners.page.js  ->  /partners/
  * ----------------------------------------------------------------------------
  * Partner cards and a partnership enquiry call-to-action.
  * ============================================================================
@@ -26,7 +26,7 @@ export const partnersPage = {
         <div>
           <h2>Want to partner with us?</h2>
           <p class="lede" style="margin:12px 0 24px">Clubs, schools and sponsors can work with us on facilities, fixtures and player development.</p>
-          <a class="btn" href="#contact?topic=partnership">Talk to us</a>
+          <a class="btn" href="/contact/?topic=partnership">Talk to us</a>
         </div>
         ${renderPhoto("kitup", { width: 900, ratio: "4/3" })}
       </div></section>`;

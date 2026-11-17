@@ -25,7 +25,7 @@ import { ENV } from "./env.js";
 export const BRAND = {
   name: "V Soccer School",
   city: "Bengaluru",
-  logo: "assets/logo.webp",
+  logo: "/assets/v-soccer-school-crest.webp",
   phone: "",          // not printed on the site on purpose
   whatsapp: ENV.whatsappChat,  // opens a WhatsApp chat from the "Chat on WhatsApp" button
   email: ENV.schoolEmail,
@@ -66,7 +66,7 @@ export const WHATSAPP_DELIVERY = {
 
 /* ---------------------------------------------------------------------------
    Photos (free Pexels licence, all taken in India)
-   To use your own photo, change `src` to a file path such as "assets/varthur.jpg".
+   To use your own photo, change `src` to a file path such as "/assets/varthur.jpg".
    `ratio` is the photo's shape; `focus` is which part to keep when cropping.
    ------------------------------------------------------------------------ */
 const pexels = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg`;
@@ -87,7 +87,7 @@ export const PHOTOS = {
    Home hero background video (top-down drone view of a match)
    Plays on tablets and desktops only; phones and data-saver users see
    `fallbackPhoto`. To use your own clip, put it in assets/ and set
-   src: "assets/match-day.mp4". Keep it short (10–30 s) and under ~15 MB.
+   src: "/assets/match-day.mp4". Keep it short (10–30 s) and under ~15 MB.
    ------------------------------------------------------------------------ */
 export const HERO_VIDEO = {
   src: "https://videos.pexels.com/video-files/16186237/16186237-uhd_2560_1440_30fps.mp4",
@@ -221,9 +221,9 @@ export const COACH = {
    Partners
    ------------------------------------------------------------------------ */
 export const PARTNERS = [
-  { id: "insa",   name: "INSA Sports Academy", initials: "IN", photo: "imphal", summary: "Home ground partner. Our advanced squad trains and hosts match days at INSA.", link: "#ground-insa", linkLabel: "See the home ground" },
-  { id: "yeshas", name: "Yeshas Sports",       initials: "YS", photo: "control", summary: "Partner for facilities and grassroots football programmes in the city.",      link: "#programmes",  linkLabel: "See programmes" },
-  { id: "manaa",  name: "Manaa Sports Club",   initials: "MS", photo: "turf", summary: "Club partner for fixtures, friendlies and player exposure.",                  link: "#timetable",   linkLabel: "See match days" },
+  { id: "insa",   name: "INSA Sports Academy", initials: "IN", photo: "imphal", summary: "Home ground partner. Our advanced squad trains and hosts match days at INSA.", link: "/grounds/insa/", linkLabel: "See the home ground" },
+  { id: "yeshas", name: "Yeshas Sports",       initials: "YS", photo: "control", summary: "Partner for facilities and grassroots football programmes in the city.",      link: "/programmes/",  linkLabel: "See programmes" },
+  { id: "manaa",  name: "Manaa Sports Club",   initials: "MS", photo: "turf", summary: "Club partner for fixtures, friendlies and player exposure.",                  link: "/timetable/",   linkLabel: "See match days" },
 ];
 
 /* ---------------------------------------------------------------------------
@@ -236,6 +236,7 @@ export const FAQ = [
   { question: "Do girls train with you?", answer: "Yes. Girls train in the same age-group batches, and we can tell you which grounds currently have the most girls enrolled." },
   { question: "Can my child train at more than one ground?", answer: "Yes. Players can join a weekday batch at one branch and the weekend batch at another. Tell us in the trial form and we will plan it." },
   { question: "How do players get into the advanced squad?", answer: "Coaches recommend players from the Youth group based on attendance, attitude and level. Selected players train at INSA Sports Academy." },
+  { question: "Where do you train?", answer: "We train at three grounds in Bengaluru: Varthur, Sarjapura and Sarjapura Attibele Road. Our home ground is INSA Sports Academy, where the advanced squad trains and match days are played." },
 ];
 
 /* ---------------------------------------------------------------------------

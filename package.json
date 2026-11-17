@@ -1,15 +1,21 @@
 {
   "name": "v-soccer-school",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "V Soccer School, Bengaluru website",
   "private": true,
   "scripts": {
     "start": "node server.js",
     "build": "node scripts/build.js",
+    "check": "node scripts/check.js",
     "preview": "node scripts/build.js && node server.js dist",
-    "env": "node scripts/env.js"
+    "env": "node scripts/env.js",
+    "og-image": "node scripts/og-image.js"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "playwright": "1.63.0"
   }
 }

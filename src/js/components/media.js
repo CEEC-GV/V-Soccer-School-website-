@@ -8,6 +8,7 @@
  * ============================================================================
  */
 import { HERO_VIDEO, PHOTOS } from "../config/site.config.js";
+import { PHOTO_FILES } from "../config/photo-files.js";
 import { registerAction } from "../core/actions.js";
 import { escapeHtml } from "../core/dom.js";
 
@@ -29,13 +30,28 @@ export function renderPhoto(key, { width = 1200, className = "", ratio, eager = 
   const photo = PHOTOS[key];
   if (!photo) return "";
   const style = ratio ? ` style="--ratio:${ratio}"` : "";
+
+  // Intrinsic size from the frame's shape, so the browser reserves the space (no layout shift)
+  const [ratioW, ratioH] = String(ratio || photo.ratio || "3/2").split("/").map(Number);
+  const height = Math.round((width * ratioH) / ratioW);
+
   return `
     <figure class="photo ${className}" data-caption="${escapeHtml(photo.alt)}"${style}>
-      <img src="${imageUrl(photo.src, width)}" alt="${escapeHtml(photo.alt)}"
+      <img ${photoSources(key, photo, width)} alt="${escapeHtml(photo.alt)}" width="${width}" height="${height}"
            style="object-position:${photo.focus || "center"}"
-           ${eager ? "" : 'loading="lazy"'} decoding="async"
+           ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"
            onerror="this.parentNode.classList.add('photo--placeholder');this.remove()">
     </figure>`;
+}
+
+/* src / srcset: the local WebP copies after a build, otherwise the source */
+function photoSources(key, photo, width) {
+  const local = PHOTO_FILES[key];
+  if (!local) return `src="${imageUrl(photo.src, width)}"`;
+  const fileFor = (w) => `/assets/photos/${local.name}-${w}.${local.ext}`;
+  const best = local.widths.find((w) => w >= width) || local.widths[local.widths.length - 1];
+  const srcset = local.widths.map((w) => `${fileFor(w)} ${w}w`).join(", ");
+  return `src="${fileFor(best)}" srcset="${srcset}" sizes="(max-width: 760px) 100vw, ${width}px"`;
 }
 
 /* ---------------------------------------------------------------------------
@@ -45,6 +61,7 @@ export function renderPhoto(key, { width = 1200, className = "", ratio, eager = 
    (data saver, reduced motion) or every file fails to load, the photo shows.
    ------------------------------------------------------------------------ */
 export function shouldPlayHeroVideo() {
+  if (navigator.webdriver) return false;   // pre-rendering at build time: keep the static HTML light
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = navigator.connection?.saveData === true;
   return Boolean(HERO_VIDEO.src) && !reducedMotion && !saveData;

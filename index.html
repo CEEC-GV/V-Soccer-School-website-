@@ -1,24 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>V Soccer School</title>
-  <meta name="description" content="V Soccer School, Bengaluru. Football coaching for ages 5 to 17 at Varthur, Sarjapura, Sarjapura Attibele Road and INSA Sports Academy.">
-  <link rel="icon" href="assets/logo.webp">
+  <title>V Soccer School | Football Academy in Bengaluru for Ages 5 to 17</title>
+  <meta data-seo name="description" content="Football coaching in Bengaluru for boys and girls aged 5 to 17 at Varthur, Sarjapura and Sarjapura Attibele Road. Head coach Ramesh B., AFC 'B' licence. Book a free trial.">
+  <meta name="theme-color" content="#111111">
+  <meta name="format-detection" content="telephone=no">
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap">
+  <!-- Icons -->
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/assets/favicon-48.png" sizes="48x48">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 
-  <!-- Styles (order matters: tokens first) -->
-  <link rel="stylesheet" href="src/styles/tokens.css">
-  <link rel="stylesheet" href="src/styles/base.css">
-  <link rel="stylesheet" href="src/styles/layout.css">
-  <link rel="stylesheet" href="src/styles/components.css">
-  <link rel="stylesheet" href="src/styles/pages.css">
-  <link rel="stylesheet" href="src/styles/celebration.css">
-  <link rel="stylesheet" href="src/styles/pitch-runner.css">
+  <!-- Fonts: self-hosted; the two used above the fold load first -->
+  <link rel="preload" href="/assets/fonts/bebas-neue-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Styles (order matters: fonts and tokens first).
+       The build joins and minifies these into one file. -->
+  <link rel="stylesheet" href="/src/styles/fonts.css">
+  <link rel="stylesheet" href="/src/styles/tokens.css">
+  <link rel="stylesheet" href="/src/styles/base.css">
+  <link rel="stylesheet" href="/src/styles/layout.css">
+  <link rel="stylesheet" href="/src/styles/components.css">
+  <link rel="stylesheet" href="/src/styles/pages.css">
+  <link rel="stylesheet" href="/src/styles/celebration.css">
+  <link rel="stylesheet" href="/src/styles/pitch-runner.css">
+
+  <!-- Search and social tags (canonical, Open Graph, Schema.org) are added
+       per page by src/js/core/seo.js and saved into the built HTML. -->
 </head>
 <body>
 
@@ -27,15 +38,15 @@
        ================================================================ -->
   <header class="site-header">
     <div class="container site-header__bar">
-      <a class="brand" href="#home" aria-label="V Soccer School home">
-        <img class="brand__logo" src="assets/logo.webp" alt="V Soccer School crest">
+      <a class="brand" href="/" aria-label="V Soccer School home">
+        <img class="brand__logo" src="/assets/v-soccer-school-crest-120.webp" alt="V Soccer School crest" width="44" height="44">
         <span class="brand__text"><span class="brand__name">V&nbsp;Soccer School</span><span class="brand__city">Bengaluru</span></span>
       </a>
       <div class="site-header__actions">
         <span class="header-clock" id="header-clock"></span>
         <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
-        <a class="requests-link" id="requests-link" href="#my-requests"><span class="requests-link__prefix">My </span>Requests<span class="requests-link__badge" id="requests-badge" hidden>0</span></a>
-        <a class="btn btn--sm" href="#book-trial">Book a trial</a>
+        <a class="requests-link" id="requests-link" href="/my-requests/"><span class="requests-link__prefix">My </span>Requests<span class="requests-link__badge" id="requests-badge" hidden>0</span></a>
+        <a class="btn btn--sm" href="/book-trial/">Book a trial</a>
         <!-- Phones only: opens the navigation menu -->
         <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
       </div>
@@ -46,8 +57,8 @@
     <nav class="main-nav" id="main-nav" aria-label="Main">
       <div class="container main-nav__list" id="main-nav-list"></div>
       <div class="container main-nav__extras">
-        <a class="btn" href="#book-trial">Book a free trial</a>
-        <a class="requests-link" href="#my-requests">My requests</a>
+        <a class="btn" href="/book-trial/">Book a free trial</a>
+        <a class="requests-link" href="/my-requests/">My requests</a>
         <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
       </div>
     </nav>
@@ -70,16 +81,16 @@
     <div class="container">
       <div class="site-footer__grid">
         <div>
-          <a class="brand" href="#home">
-            <img class="brand__logo" src="assets/logo.webp" alt="">
+          <a class="brand" href="/">
+            <img class="brand__logo" src="/assets/v-soccer-school-crest-120.webp" alt="" width="60" height="60" loading="lazy">
             <span class="brand__text"><span class="brand__name">V&nbsp;Soccer School</span><span class="brand__city">Bengaluru</span></span>
           </a>
           <p class="muted" style="font-size:14px;margin-top:14px;max-width:34ch">Football coaching for boys and girls across east Bengaluru, led by a licensed former national-level player.</p>
         </div>
-        <div><h4>School</h4><ul id="footer-links"></ul></div>
-        <div><h4>Grounds</h4><ul id="footer-grounds"></ul></div>
+        <nav aria-label="School"><h2 class="site-footer__heading">School</h2><ul id="footer-links"></ul></nav>
+        <nav aria-label="Grounds"><h2 class="site-footer__heading">Grounds</h2><ul id="footer-grounds"></ul></nav>
         <div>
-          <h4>Fixtures & news</h4>
+          <h2 class="site-footer__heading">Fixtures &amp; news</h2>
           <p class="muted" style="font-size:14px;margin-bottom:10px">Get trial dates, holiday camps and match-day updates.</p>
           <form id="newsletter-form" novalidate style="display:flex">
             <label for="newsletter-email" style="position:absolute;left:-9999px">Email</label>
@@ -90,6 +101,7 @@
         </div>
       </div>
       <div class="site-footer__legal">
+        <nav class="site-footer__legal-links" aria-label="Legal" id="footer-legal"></nav>
         <span>© <span id="footer-year"></span> <a href="https://ceec.org.in/" target="_blank" rel="noopener">CEEC Global Ventures</a> · Powered by <a href="https://ceec.org.in/" target="_blank" rel="noopener">CEEC Global Ventures</a></span>
       </div>
     </div>
@@ -103,6 +115,6 @@
   <div id="lightbox-root"></div>
 
   <!-- App (ES modules) -->
-  <script type="module" src="src/js/app.js"></script>
+  <script type="module" src="/src/js/app.js"></script>
 </body>
 </html>

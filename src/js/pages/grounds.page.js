@@ -3,8 +3,8 @@
  * pages/grounds.page.js
  * ----------------------------------------------------------------------------
  * Two screens:
- *   branchesPage     #branches          all grounds as cards
- *   groundDetailPage #ground-<id>       one ground: live status, batches,
+ *   branchesPage     /branches/         all grounds as cards
+ *   groundDetailPage /grounds/<id>/     one ground: live status, batches,
  *                                       booking, directions, other grounds
  * ============================================================================
  */
@@ -60,9 +60,9 @@ export const groundDetailPage = {
           <h3 class="subhead">Weekly batches</h3>
           ${renderSessionList(ground)}
           <div class="button-row" style="margin-top:28px">
-            <a class="btn" href="#book-trial?ground=${ground.id}">Book a trial here</a>
+            <a class="btn" href="/book-trial/?ground=${ground.id}">Book a trial here</a>
             <a class="btn btn--ghost" href="${mapsUrl(ground.mapQuery)}" target="_blank" rel="noopener">Get directions</a>
-            <a class="btn btn--ghost" href="#timetable?ground=${ground.id}">Timetable</a>
+            <a class="btn btn--ghost" href="/timetable/?ground=${ground.id}">Timetable</a>
           </div>
         </div>
         <div>${renderPhoto(ground.photo, { width: 1000, ratio: "4/3" })}</div>
@@ -72,7 +72,7 @@ export const groundDetailPage = {
       <section class="section"><div class="container">
         <div class="section-head">
           <div><h2>More places to train</h2></div>
-          <a class="btn btn--ghost" href="#branches">All branches</a>
+          <a class="btn btn--ghost" href="/branches/">All branches</a>
         </div>
         <div class="ground-grid">${otherGrounds.map(renderGroundCard).join("")}</div>
       </div></section>`;

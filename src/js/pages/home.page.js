@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/home.page.js  ->  #home
+ * pages/home.page.js  ->  /
  * ----------------------------------------------------------------------------
  * Sections: hero (match-day video), live session board, photo strip, player pathway,
  * head coach, gallery preview, partners, trial call-to-action.
@@ -24,12 +24,12 @@ export const homePage = {
             <h1>Learn the game<br>the <em>right way</em></h1>
             <p class="lede">Structured coaching for ages 5 to 17 at Varthur, Sarjapura and Sarjapura Attibele Road, with the advanced squad at our home ground, INSA Sports Academy.</p>
             <div class="hero__actions">
-              <a class="btn" href="#book-trial">Book a free trial</a>
-              <a class="btn btn--ghost" href="#timetable">This week's timetable</a>
+              <a class="btn" href="/book-trial/">Book a free trial</a>
+              <a class="btn btn--ghost" href="/timetable/">This week's timetable</a>
             </div>
             <p class="hero__note">Head coach Ramesh B. holds the AFC 'B' Diploma and AIFF 'C' Licence and has coached Karnataka's junior state teams.</p>
           </div>
-          <div class="hero__crest"><img src="${BRAND.logo}" alt="${BRAND.name} crest"></div>
+          <div class="hero__crest"><img src="${BRAND.logo}" alt="${BRAND.name} crest" width="300" height="300"></div>
         </div>
       </div>
 
@@ -51,7 +51,7 @@ export const homePage = {
         <div class="container">
         <div class="section-head">
           <div><h2>From first touch to match day</h2></div>
-          <a class="btn btn--ghost" href="#programmes">All programmes</a>
+          <a class="btn btn--ghost" href="/programmes/">All programmes</a>
         </div>
         ${renderProgrammeGrid(false)}
       </div>
@@ -64,8 +64,8 @@ export const homePage = {
           <h2>Awards & recognition</h2>
           ${renderHonoursList(4)}
           <div class="button-row" style="margin-top:24px">
-            <a class="btn btn--ghost" href="#coach">Full profile</a>
-            <a class="btn btn--ghost" href="#contact?topic=coach">Ask the coach</a>
+            <a class="btn btn--ghost" href="/coach/">Full profile</a>
+            <a class="btn btn--ghost" href="/contact/?topic=coach">Ask the coach</a>
           </div>
         </div>
       </div></section>
@@ -74,7 +74,7 @@ export const homePage = {
       <section class="section"><div class="container">
         <div class="section-head">
           <div><h2>Gallery</h2></div>
-          <a class="btn btn--ghost" href="#gallery">View all photos</a>
+          <a class="btn btn--ghost" href="/gallery/">View all photos</a>
         </div>
         ${renderGalleryGrid(GALLERY.slice(0, 6))}
       </div></section>
@@ -85,7 +85,7 @@ export const homePage = {
         <div class="container">
         <div class="section-head">
           <div><h2>Our partners</h2></div>
-          <a class="btn btn--ghost" href="#partners">About our partners</a>
+          <a class="btn btn--ghost" href="/partners/">About our partners</a>
         </div>
         ${renderPartnerGrid()}
       </div>
@@ -96,7 +96,7 @@ export const homePage = {
         <div>
           <h2>Your first session is free</h2>
           <p class="lede" style="margin:12px 0 24px">Bring boots, water and a parent. The coach will tell you which group suits your child after the session.</p>
-          <a class="btn" href="#book-trial">Book a free trial</a>
+          <a class="btn" href="/book-trial/">Book a free trial</a>
         </div>
         ${renderPhoto("teen", { width: 900, ratio: "4/3" })}
       </div></section>`;

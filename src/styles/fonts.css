@@ -1,0 +1,29 @@
+/* ==========================================================================
+   fonts.css
+   Self-hosted fonts (no Google Fonts request): only the three files the
+   design uses, Latin subset, WOFF2. Licence: assets/fonts/OFL-LICENSE.txt
+     Bebas Neue 400   headings
+     Poppins 400      body text
+     Poppins 600      bold text, buttons, labels
+   ========================================================================== */
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/bebas-neue-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/poppins-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/poppins-600.woff2") format("woff2");
+}

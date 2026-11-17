@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/book-trial.page.js  ->  #book-trial
+ * pages/book-trial.page.js  ->  /book-trial/
  * ----------------------------------------------------------------------------
  * Query options:
  *   ?ground=<id>&batch=<n>&programme=<id>&date=<yyyy-mm-dd>  pre-fill the form
@@ -35,7 +35,7 @@ export const bookTrialPage = {
             <p>We confirm your slot at the ground you pick. After the session the coach tells you which group suits your child.</p>
             <p>Bring football boots or turf shoes, shin pads if you have them, and a water bottle.</p>
             ${renderContactDetails()}
-            <a class="text-link" href="#my-requests">View my requests</a>
+            <a class="text-link" href="/my-requests/">View my requests</a>
           </div>
         </aside>
       </div></section>`;

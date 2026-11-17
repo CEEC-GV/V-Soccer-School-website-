@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/timetable.page.js  ->  #timetable   (optional ?ground=<id>)
+ * pages/timetable.page.js  ->  /timetable/   (optional ?ground=<id>)
  * ----------------------------------------------------------------------------
  * Weekly grid of every batch. Tap a session to book a trial in it.
  * ============================================================================

@@ -28,6 +28,7 @@ const KEYS = {
   SCHOOL_WHATSAPP_RELAY: "whatsappRelayUrl",  // Google Apps Script URL that WhatsApps each request
   SCHOOL_WHATSAPP_CHAT: "whatsappChat",       // number behind the "Chat on WhatsApp" button
   SCHOOL_INSTAGRAM: "schoolInstagram",
+  SITE_URL: "siteUrl",                        // public address, used for canonical URLs and the sitemap
 };
 
 /* ---------------------------------------------------------------------------

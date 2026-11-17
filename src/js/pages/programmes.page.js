@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/programmes.page.js  ->  #programmes
+ * pages/programmes.page.js  ->  /programmes/
  * ----------------------------------------------------------------------------
  * Sections: banner, programme cards, what a 90-minute session looks like.
  * ============================================================================
@@ -42,8 +42,8 @@ export const programmesPage = {
               ${SESSION_PLAN.map((step) => `<li><span class="honours__label">${escapeHtml(step.time)}</span><span class="honours__value">${escapeHtml(step.activity)}</span></li>`).join("")}
             </ul>
             <div class="button-row" style="margin-top:28px">
-              <a class="btn" href="#book-trial">Book a free trial</a>
-              <a class="btn btn--ghost" href="#timetable">See batch times</a>
+              <a class="btn" href="/book-trial/">Book a free trial</a>
+              <a class="btn btn--ghost" href="/timetable/">See batch times</a>
             </div>
           </div>
           ${renderPhoto("strike", { width: 900, ratio: "4/5" })}

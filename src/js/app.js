@@ -13,7 +13,7 @@
  *   7. Bootstrap    wires everything together on load
  * ============================================================================
  */
-import { BRAND, GROUNDS, findGround } from "./config/site.config.js";
+import { GROUNDS, findGround } from "./config/site.config.js";
 import { renderLiveStatus, renderSessionBoard } from "./components/cards.js";
 import { renderGroundTabs } from "./components/ground-tabs.js";
 import { mountPitchRunner } from "./components/pitch-runner.js";
@@ -21,12 +21,13 @@ import { closeLightbox } from "./components/lightbox.js";
 import { refreshTimetable } from "./components/timetable.js";
 import { startActionListener } from "./core/actions.js";
 import { escapeHtml } from "./core/dom.js";
-import { startRouter } from "./core/router.js";
+import { startRouter, urlFor } from "./core/router.js";
+import { applyPageMeta } from "./core/seo.js";
 import { Store } from "./core/store.js";
 import { formatClock, getIstNow } from "./core/time.js";
 import { bindNewsletterForm } from "./forms/newsletter.js";
 import "./forms/share.js"; // registers send / copy actions
-import { NAV_ITEMS, resolveRoute } from "./pages/routes.js";
+import { FOOTER_EXTRA_ITEMS, LEGAL_ITEMS, NAV_ITEMS, resolveRoute } from "./pages/routes.js";
 
 const LIVE_REFRESH_MS = 15000;
 const THEME_STORAGE_KEY = "vss-theme";
@@ -85,17 +86,21 @@ function initMobileMenu() {
 function renderChrome() {
   // Main navigation bar
   document.getElementById("main-nav-list").innerHTML = NAV_ITEMS
-    .map((item) => `<a class="main-nav__link" href="#${item.path}" data-nav="${item.path}">${escapeHtml(item.label)}</a>`)
+    .map((item) => `<a class="main-nav__link" href="${urlFor(item.path)}" data-nav="${item.path}">${escapeHtml(item.label)}</a>`)
     .join("");
 
   // Footer: school links
-  const footerLinks = [...NAV_ITEMS.filter((item) => item.path !== "home"), { path: "book-trial", label: "Book a trial" }, { path: "my-requests", label: "My requests" }];
+  const footerLinks = [...NAV_ITEMS.filter((item) => item.path !== "home"), ...FOOTER_EXTRA_ITEMS];
   document.getElementById("footer-links").innerHTML = footerLinks
-    .map((item) => `<li><a href="#${item.path}">${escapeHtml(item.label)}</a></li>`).join("");
+    .map((item) => `<li><a href="${urlFor(item.path)}">${escapeHtml(item.label)}</a></li>`).join("");
+
+  // Footer: privacy and terms
+  document.getElementById("footer-legal").innerHTML = LEGAL_ITEMS
+    .map((item) => `<a href="${urlFor(item.path)}">${escapeHtml(item.label)}</a>`).join("");
 
   // Footer: grounds
   document.getElementById("footer-grounds").innerHTML = GROUNDS
-    .map((ground) => `<li><a href="#ground-${ground.id}">${escapeHtml(ground.name)}</a></li>`).join("");
+    .map((ground) => `<li><a href="/grounds/${ground.id}/">${escapeHtml(ground.name)}</a></li>`).join("");
 
   // Footer: year
   document.getElementById("footer-year").textContent = getIstNow().date.getFullYear();
@@ -104,8 +109,13 @@ function renderChrome() {
 /* ============================================================================
    3. Routing
    ========================================================================== */
-function renderRoute({ path, query }) {
-  const { page, param } = resolveRoute(path);
+let routeToken = 0;   // ignores a slow page load if the visitor has already moved on
+
+async function renderRoute({ path, query }) {
+  const token = ++routeToken;
+  const { load, param, found } = resolveRoute(path);
+  const page = await load();
+  if (token !== routeToken) return;
   activeGroundId = findGround(param) ? param : "";
 
   // Draw the page
@@ -118,7 +128,8 @@ function renderRoute({ path, query }) {
   document.getElementById("requests-link").setAttribute("aria-current", path === "my-requests" ? "page" : "false");
   document.querySelector('.main-nav__link[aria-current="page"]')?.scrollIntoView?.({ block: "nearest", inline: "center" });
 
-  document.title = page.navId === "home" ? BRAND.name : `${page.title} · ${BRAND.name}`;
+  applyPageMeta(path, { found });
+  document.documentElement.dataset.route = found ? path : "not-found";   // tells the build the page is drawn
 
   closeLightbox();
   setMenuOpen(false);

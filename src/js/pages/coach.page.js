@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * pages/coach.page.js  ->  #coach
+ * pages/coach.page.js  ->  /coach/
  * ----------------------------------------------------------------------------
  * Head coach profile: licences, awards and recognition.
  * ============================================================================
@@ -29,8 +29,8 @@ export const coachPage = {
           <p class="lede" style="margin-bottom:28px">Ramesh played the game at national level before moving into coaching. He has coached Karnataka's junior and sub-junior state teams and worked with professional club sides in the KSFA League.</p>
           ${renderHonoursList()}
           <div class="button-row" style="margin-top:24px">
-            <a class="btn" href="#book-trial">Train with Ramesh</a>
-            <a class="btn btn--ghost" href="#contact?topic=coach">Ask the coach a question</a>
+            <a class="btn" href="/book-trial/">Train with Ramesh</a>
+            <a class="btn btn--ghost" href="/contact/?topic=coach">Ask the coach a question</a>
           </div>
         </div>
       </div></section>`;

@@ -39,7 +39,7 @@ export function renderSessionBoard() {
     const { live, next, startsIn } = getGroundStatus(ground);
     if (live) {
       return `
-        <a class="session-board__item" href="#ground-${ground.id}">
+        <a class="session-board__item" href="/grounds/${ground.id}/">
           <span class="live-status live-status--on"><i class="status-dot status-dot--live"></i>Training now</span>
           <h3>${escapeHtml(ground.name)}</h3>
           <span class="session-board__count">${live.minutesLeft}<small> min left</small></span>
@@ -47,7 +47,7 @@ export function renderSessionBoard() {
         </a>`;
     }
     return `
-      <a class="session-board__item" href="#ground-${ground.id}">
+      <a class="session-board__item" href="/grounds/${ground.id}/">
         <span class="live-status"><i class="status-dot"></i>${startsIn < 1440 ? "Later today" : "Next session"}</span>
         <h3>${escapeHtml(ground.name)}</h3>
         <span class="session-board__count">${formatDuration(startsIn)}</span>
@@ -70,8 +70,8 @@ export function renderProgrammeGrid(showDetails = false) {
         <p>${escapeHtml(programme.summary)}</p>
         ${showDetails ? `<ul class="bullet-list">${programme.focus.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
         <div class="card__actions">
-          <a class="text-link" href="#book-trial?programme=${programme.id}">Book this programme</a>
-          ${showDetails ? "" : `<a class="text-link" href="#programmes">Details</a>`}
+          <a class="text-link" href="/book-trial/?programme=${programme.id}">Book this programme</a>
+          ${showDetails ? "" : `<a class="text-link" href="/programmes/">Details</a>`}
         </div>
       </div>
     </article>`);
@@ -132,8 +132,8 @@ export function renderGroundCard(ground) {
         <p class="muted">${escapeHtml(ground.summary)}</p>
         ${renderSessionList(ground)}
         <div class="card__actions">
-          <a class="text-link" href="#ground-${ground.id}">Details</a>
-          <a class="text-link" href="#book-trial?ground=${ground.id}">Book a trial</a>
+          <a class="text-link" href="/grounds/${ground.id}/">Details</a>
+          <a class="text-link" href="/book-trial/?ground=${ground.id}">Book a trial</a>
           <a class="text-link" href="${mapsUrl(ground.mapQuery)}" target="_blank" rel="noopener">Directions</a>
         </div>
       </div>

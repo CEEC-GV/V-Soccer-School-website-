@@ -176,7 +176,7 @@ export function renderTrialForm(prefill = {}, existing = null) {
       <!-- Submit -->
       <div class="button-row" style="margin-top:24px">
         <button class="btn" type="submit">${existing ? "Save changes" : "Request trial"}</button>
-        ${existing ? `<a class="btn btn--ghost" href="#my-requests">Cancel editing</a>` : `<button class="btn btn--ghost" type="reset">Clear form</button>`}
+        ${existing ? `<a class="btn btn--ghost" href="/my-requests/">Cancel editing</a>` : `<button class="btn btn--ghost" type="reset">Clear form</button>`}
         <span class="field-hint" id="trial-form-status"></span>
       </div>
     </form>`;
@@ -197,9 +197,9 @@ export function renderTrialConfirmation(trial) {
       <pre>${escapeHtml(summariseTrial(trial))}</pre>
       <div class="button-row" data-fallback hidden>${renderSendButtons("trials", trial)}</div>
       <div class="button-row">
-        <a class="text-link" href="#my-requests">View my requests</a>
-        <a class="text-link" href="#book-trial">Book another player</a>
-        <a class="text-link" href="#ground-${trial.ground}">Ground details</a>
+        <a class="text-link" href="/my-requests/">View my requests</a>
+        <a class="text-link" href="/book-trial/">Book another player</a>
+        <a class="text-link" href="/grounds/${trial.ground}/">Ground details</a>
       </div>
     </div>`;
 }
