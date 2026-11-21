@@ -3,7 +3,10 @@
 # ----------------------------------------------------------------------------
 #   Pull request to main  -> build + checks only (nothing goes live)
 #   Push to main          -> build + checks, then deploy to GitHub Pages
-#   Run workflow button   -> same as a push (use after changing a secret)
+#   Run workflow button   -> same as a push (use after changing a secret,
+#                            or to publish a new blog post right away)
+#   Every 6 hours         -> rebuild + deploy, so posts published in
+#                            BlogSpeed go live without touching the code
 #
 # Private settings come from repository secrets, so .env never goes to Git.
 # A failed check (broken link, missing title, bad schema, ...) stops the
@@ -17,6 +20,8 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"     # 4 times a day (UTC); about 120 BlogSpeed requests a month
 
 permissions:
   contents: read
@@ -69,9 +74,19 @@ jobs:
           key: photos-${{ hashFiles('src/js/config/site.config.js') }}
           restore-keys: photos-
 
+      # Blog posts already downloaded from BlogSpeed; only new or edited posts are fetched again
+      - name: Cache blog posts
+        uses: actions/cache@v4
+        with:
+          path: .cache/blog
+          key: blog-${{ github.run_id }}
+          restore-keys: blog-
+
       - name: Build site
         run: npm run build
         env:
+          BLOGSPEED_API_URL: ${{ vars.BLOGSPEED_API_URL || 'https://blogspeed.io/api' }}
+          BLOGSPEED_API_KEY: ${{ secrets.BLOGSPEED_API_KEY }}
           SCHOOL_EMAIL: ${{ secrets.SCHOOL_EMAIL }}
           SCHOOL_INSTAGRAM: ${{ secrets.SCHOOL_INSTAGRAM }}
           SCHOOL_WHATSAPP_RELAY: ${{ secrets.SCHOOL_WHATSAPP_RELAY }}

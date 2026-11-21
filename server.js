@@ -10,6 +10,9 @@
  *
  * Private settings: src/js/config/env.js is generated from .env on every
  * request, so editing .env only needs a browser refresh.
+ *
+ * Blog: posts are fetched from BlogSpeed once when `npm start` begins
+ * (scripts/blog.js). Run `npm run blog` and refresh to pick up new posts.
  * ============================================================================
  */
 const http = require("http");
@@ -65,6 +68,11 @@ function createHandler({ root, mode, fallback }) {
       response.writeHead(200, { "Content-Type": CONTENT_TYPES[".js"], "Cache-Control": "no-store" });
       return response.end(createEnvModule().source);
     }
+    // Blog posts: the file written by scripts/blog.js, or an empty list until it exists
+    if (mode === "source" && urlPath === "/src/js/config/blog-data.js" && !fs.existsSync(path.join(root, urlPath))) {
+      response.writeHead(200, { "Content-Type": CONTENT_TYPES[".js"], "Cache-Control": "no-store" });
+      return response.end("export const BLOG_POSTS = [];\n");
+    }
 
     const hasExtension = path.extname(urlPath) !== "";
     const filePath = path.normalize(path.join(root, urlPath));
@@ -115,6 +123,10 @@ module.exports = { startServer };
    ------------------------------------------------------------------------ */
 if (require.main === module) {
   const dist = process.argv[2] === "dist";
-  if (!dist) createEnvModule().warnings.forEach((warning) => console.warn(`⚠  ${warning}`));
+  if (!dist) {
+    createEnvModule().warnings.forEach((warning) => console.warn(`⚠  ${warning}`));
+    // Fetch the blog in the background; the site works meanwhile
+    require("./scripts/blog.js").updateBlog().catch((error) => console.warn(`⚠  ${error.message}`));
+  }
   startServer({ root: path.resolve(__dirname, dist ? "dist" : "."), mode: dist ? "dist" : "source" });
 }

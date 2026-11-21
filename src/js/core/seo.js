@@ -39,6 +39,10 @@ function setMeta(attribute, key, content) {
   element.setAttribute("content", content);
 }
 
+function removeMeta(attribute, key) {
+  document.head.querySelector(`meta[${attribute}="${key}"]`)?.remove();
+}
+
 function setLink(rel, href) {
   const element = upsert(`link[rel="${rel}"]`, () => {
     const link = document.createElement("link");
@@ -116,6 +120,7 @@ function coachPerson() {
 function breadcrumbs(route, name) {
   const items = [{ name: "Home", url: absolute("/") }];
   if (route.startsWith("ground-")) items.push({ name: "Branches", url: absolute(urlFor("branches")) });
+  if (route.startsWith("post-")) items.push({ name: "Blog", url: absolute(urlFor("blog")) });
   items.push({ name, url: absolute(urlFor(route)) });
   return {
     "@type": "BreadcrumbList",
@@ -123,12 +128,12 @@ function breadcrumbs(route, name) {
   };
 }
 
-function schemaFor(route, meta, pageUrl, shortTitle) {
+function schemaFor(route, meta, pageUrl, shortTitle, extra = []) {
   const graph = [
     organisation(),
     { "@type": "WebSite", "@id": SITE_ID, url: `${SITE.url}/`, name: SITE.name, inLanguage: SITE.language, publisher: { "@id": ORG_ID } },
     {
-      "@type": route === "faq" ? "FAQPage" : route === "about" ? "AboutPage" : route === "contact" ? "ContactPage" : "WebPage",
+      "@type": route === "faq" ? "FAQPage" : route === "about" ? "AboutPage" : route === "contact" ? "ContactPage" : route === "blog" ? "CollectionPage" : "WebPage",
       "@id": `${pageUrl}#webpage`,
       url: pageUrl,
       name: meta.fullTitle,
@@ -147,6 +152,12 @@ function schemaFor(route, meta, pageUrl, shortTitle) {
   if (route === "branches" || route === "home") GROUNDS.forEach((ground) => graph.push(groundPlace(ground)));
   const ground = route.startsWith("ground-") && findGround(route.slice("ground-".length));
   if (ground) graph.push(groundPlace(ground));
+  // Extra items from the page, e.g. BlogSpeed's BlogPosting / FAQPage for a post
+  extra.forEach((item) => {
+    if (!item || typeof item !== "object") return;
+    const { "@context": _context, ...rest } = item;   // the whole graph already has the schema.org context
+    graph.push(rest);
+  });
 
   return { "@context": "https://schema.org", "@graph": graph };
 }
@@ -154,12 +165,16 @@ function schemaFor(route, meta, pageUrl, shortTitle) {
 /* ---------------------------------------------------------------------------
    Public API: call after a page is drawn
    route: route name ("about", "ground-insa"); found: false for unknown pages
+   override: optional meta from the page itself (blog posts), any of
+     { title, fullTitle, description, keywords, image, imageAlt,
+       type: "article", publishedTime, modifiedTime, schema: [] }
    ------------------------------------------------------------------------ */
-export function applyPageMeta(route, { found = true } = {}) {
+export function applyPageMeta(route, { found = true, override } = {}) {
   const key = found ? route : "not-found";
-  const meta = metaFor(key);
-  const fullTitle = key === "home" ? meta.title : `${meta.title} | ${SITE.name}`;
+  const meta = override ? { ...metaFor("blog"), ...override } : metaFor(key);
+  const fullTitle = meta.fullTitle || (key === "home" ? meta.title : `${meta.title} | ${SITE.name}`);
   const pageUrl = absolute(found ? urlFor(route) : "/404.html");
+  const image = meta.image || absolute(SITE.ogImage);
 
   document.title = fullTitle;
   document.documentElement.lang = SITE.language;
@@ -171,21 +186,33 @@ export function applyPageMeta(route, { found = true } = {}) {
   else document.head.querySelector('link[rel="canonical"]')?.remove();
 
   // Open Graph (WhatsApp, Facebook, LinkedIn) and X
-  setMeta("property", "og:type", "website");
+  setMeta("property", "og:type", meta.type === "article" ? "article" : "website");
   setMeta("property", "og:site_name", SITE.name);
   setMeta("property", "og:locale", SITE.locale);
   setMeta("property", "og:title", fullTitle);
   setMeta("property", "og:description", meta.description);
   setMeta("property", "og:url", pageUrl);
-  setMeta("property", "og:image", absolute(SITE.ogImage));
-  setMeta("property", "og:image:width", "1200");
-  setMeta("property", "og:image:height", "630");
-  setMeta("property", "og:image:alt", SITE.ogImageAlt);
+  setMeta("property", "og:image", image);
+  if (meta.image) {
+    // A post's cover image: its size isn't known, so don't claim one
+    removeMeta("property", "og:image:width");
+    removeMeta("property", "og:image:height");
+  } else {
+    setMeta("property", "og:image:width", "1200");
+    setMeta("property", "og:image:height", "630");
+  }
+  setMeta("property", "og:image:alt", meta.imageAlt || SITE.ogImageAlt);
+  // Article dates (blog posts only; also used for <lastmod> in sitemap.xml)
+  if (meta.publishedTime) setMeta("property", "article:published_time", meta.publishedTime);
+  else removeMeta("property", "article:published_time");
+  if (meta.modifiedTime) setMeta("property", "article:modified_time", meta.modifiedTime);
+  else removeMeta("property", "article:modified_time");
   setMeta("name", "twitter:card", "summary_large_image");
   setMeta("name", "twitter:title", fullTitle);
   setMeta("name", "twitter:description", meta.description);
-  setMeta("name", "twitter:image", absolute(SITE.ogImage));
+  setMeta("name", "twitter:image", image);
 
-  if (found && meta.index) setJsonLd(schemaFor(route, { ...meta, fullTitle }, pageUrl, meta.title.split(":")[0]));
+  const shortTitle = override ? meta.title : meta.title.split(":")[0];
+  if (found && meta.index) setJsonLd(schemaFor(route, { ...meta, fullTitle }, pageUrl, shortTitle, meta.schema || []));
   else document.head.querySelector('script[type="application/ld+json"]')?.remove();
 }

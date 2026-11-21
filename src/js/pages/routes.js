@@ -32,12 +32,15 @@ const ROUTES = {
   faq:           () => import("./faq.page.js").then((m) => m.faqPage),
   "book-trial":  () => import("./book-trial.page.js").then((m) => m.bookTrialPage),
   "my-requests": () => import("./my-requests.page.js").then((m) => m.myRequestsPage),
+  blog:          () => import("./blog.page.js").then((m) => m.blogPage),
   privacy:       () => import("./legal.page.js").then((m) => m.privacyPage),
   terms:         () => import("./legal.page.js").then((m) => m.termsPage),
 };
 
 const loadGround = () => import("./grounds.page.js").then((m) => m.groundDetailPage);
 const loadNotFound = () => import("./not-found.page.js").then((m) => m.notFoundPage);
+// A blog post that doesn't exist (or was unpublished) gets the 404 page.
+const loadPost = (slug) => import("./blog.page.js").then((m) => (m.findPost(slug) ? m.blogPostPage : loadNotFound()));
 
 /* ---------------------------------------------------------------------------
    Main navigation order
@@ -50,6 +53,7 @@ export const NAV_ITEMS = [
   { path: "branches", label: "Branches" },
   { path: "timetable", label: "Timetable" },
   { path: "gallery", label: "Gallery" },
+  { path: "blog", label: "Blog" },
   { path: "partners", label: "Partners" },
   { path: "contact", label: "Contact" },
 ];
@@ -75,6 +79,10 @@ export function resolveRoute(path) {
   if (path.startsWith("ground-")) {
     const id = path.slice("ground-".length);
     if (findGround(id)) return { load: loadGround, param: id, found: true };
+  }
+  if (path.startsWith("post-")) {
+    const slug = path.slice("post-".length);
+    return { load: () => loadPost(slug), param: slug, found: true };   // app.js checks page.notFound
   }
   return { load: loadNotFound, param: "", found: false };
 }

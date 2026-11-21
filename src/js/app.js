@@ -113,9 +113,10 @@ let routeToken = 0;   // ignores a slow page load if the visitor has already mov
 
 async function renderRoute({ path, query }) {
   const token = ++routeToken;
-  const { load, param, found } = resolveRoute(path);
+  const { load, param, found: routeFound } = resolveRoute(path);
   const page = await load();
   if (token !== routeToken) return;
+  const found = routeFound && !page.notFound;   // e.g. /blog/<unknown-slug>/
   activeGroundId = findGround(param) ? param : "";
 
   // Draw the page
@@ -128,7 +129,7 @@ async function renderRoute({ path, query }) {
   document.getElementById("requests-link").setAttribute("aria-current", path === "my-requests" ? "page" : "false");
   document.querySelector('.main-nav__link[aria-current="page"]')?.scrollIntoView?.({ block: "nearest", inline: "center" });
 
-  applyPageMeta(path, { found });
+  applyPageMeta(path, { found, override: found ? page.meta?.(query, param) : undefined });
   document.documentElement.dataset.route = found ? path : "not-found";   // tells the build the page is drawn
 
   closeLightbox();

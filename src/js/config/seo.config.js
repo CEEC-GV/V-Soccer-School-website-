@@ -91,6 +91,11 @@ export const PAGE_META = {
     description: "Answers for parents: starting age, the free trial, what to bring, girls' training, training at two grounds, the advanced squad and where V Soccer School trains.",
     keywords: ["football academy FAQ", "kids football questions", "free football trial Bengaluru"],
   },
+  blog: {
+    title: "Blog: Football Tips and Academy News",
+    description: "Training tips, match reports and news from V Soccer School, Bengaluru: advice for young footballers aged 5 to 17 and their parents.",
+    keywords: ["football tips for kids", "youth football blog", "V Soccer School news"],
+  },
   "book-trial": {
     title: "Book a Free Football Trial",
     description: "Book a free trial session at V Soccer School, Bengaluru. Pick a ground and batch; your child joins a normal session and the coach recommends the right group.",
