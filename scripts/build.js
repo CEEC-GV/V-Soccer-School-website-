@@ -5,6 +5,7 @@
  * Builds the production site into dist/, ready for GitHub Pages:
  *
  *   1. Settings     src/js/config/env.js from .env or CI secrets
+ *   1b. Blog        published posts from BlogSpeed -> src/js/config/blog-data.js
  *   2. Photos       local WebP copies with descriptive names (scripts/photos.js)
  *   3. JavaScript   bundled, minified and split per page (esbuild)
  *   4. CSS          all stylesheets joined and minified into one file
@@ -24,6 +25,7 @@ const crypto = require("crypto");
 const esbuild = require("esbuild");
 const { chromium } = require("playwright");
 const { writeEnvModule } = require("./env.js");
+const { updateBlog } = require("./blog.js");
 const { buildPhotos } = require("./photos.js");
 const { startServer } = require("../server.js");
 
@@ -124,9 +126,10 @@ const PAGE_MODULES = {   // route path -> page module file (for modulepreload)
   "/": "home.page.js", "/about/": "about.page.js", "/programmes/": "programmes.page.js", "/coach/": "coach.page.js",
   "/branches/": "grounds.page.js", "/timetable/": "timetable.page.js", "/gallery/": "gallery.page.js",
   "/partners/": "partners.page.js", "/contact/": "contact.page.js", "/faq/": "faq.page.js",
-  "/book-trial/": "book-trial.page.js", "/my-requests/": "my-requests.page.js", "/privacy/": "legal.page.js", "/terms/": "legal.page.js",
+  "/book-trial/": "book-trial.page.js", "/blog/": "blog.page.js", "/my-requests/": "my-requests.page.js", "/privacy/": "legal.page.js", "/terms/": "legal.page.js",
 };
-const moduleForPath = (urlPath) => PAGE_MODULES[urlPath] || (urlPath.startsWith("/grounds/") ? "grounds.page.js" : "not-found.page.js");
+const moduleForPath = (urlPath) => PAGE_MODULES[urlPath]
+  || (urlPath.startsWith("/grounds/") ? "grounds.page.js" : urlPath.startsWith("/blog/") ? "blog.page.js" : "not-found.page.js");
 
 async function capturePage(page, urlPath, port) {
   await page.goto(`http://localhost:${port}${urlPath}`, { waitUntil: "domcontentloaded" });
@@ -141,6 +144,7 @@ async function capturePage(page, urlPath, port) {
       head: [...document.head.querySelectorAll("[data-seo]")].map((el) => el.outerHTML),
       canonical: document.head.querySelector('link[rel="canonical"]')?.href || "",
       robots: document.head.querySelector('meta[name="robots"]')?.content || "",
+      modified: document.head.querySelector('meta[property="article:modified_time"]')?.content || "",
       parts: Object.fromEntries(["app", "main-nav-list", "footer-links", "footer-grounds", "footer-legal", "footer-year", "ground-tabs"].map((id) => [id, inner(id)])),
       links,
     };
@@ -226,7 +230,7 @@ function writeCrawlerFiles(pages) {
 
   const urls = indexable
     .sort((a, b) => a.urlPath.split("/").length - b.urlPath.split("/").length || a.urlPath.localeCompare(b.urlPath))
-    .map((p) => `  <url>\n    <loc>${p.canonical}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`);
+    .map((p) => `  <url>\n    <loc>${p.canonical}</loc>\n    <lastmod>${(p.modified || "").slice(0, 10) || today}</lastmod>\n  </url>`);
   fs.writeFileSync(path.join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
   return { siteUrl, count: indexable.length };
@@ -238,6 +242,7 @@ function writeCrawlerFiles(pages) {
 async function build() {
   const started = Date.now();
   writeEnvModule();
+  const blog = await updateBlog({ strict: true });
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
 
@@ -253,6 +258,7 @@ async function build() {
   console.log(`Built dist/ in ${((Date.now() - started) / 1000).toFixed(1)} s`);
   console.log(`  ${pages.length} pages pre-rendered (${sitemap.count} in sitemap.xml, ${sitemap.siteUrl})`);
   console.log(`  ${Object.keys(photoFiles).length} photos saved locally as WebP`);
+  console.log(`  ${blog.posts.length} blog post(s) from BlogSpeed`);
   console.log(`  CSS: ${styles.files.length} files -> ${styles.href}`);
 }
 

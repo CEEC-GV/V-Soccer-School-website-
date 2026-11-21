@@ -10,7 +10,8 @@ Live at **https://vsocceracademy.com**.
 
 ## Features
 
-- **18 pages with clean addresses** (`/about/`, `/grounds/varthur/`): Home, About, Programmes, Head Coach, Branches, one page per ground, Timetable, Gallery, Partners, Contact, FAQ, Book a trial, My requests, Privacy, Terms, plus a 404 page.
+- **19 pages with clean addresses** (`/about/`, `/grounds/varthur/`): Home, About, Programmes, Head Coach, Branches, one page per ground, Timetable, Gallery, Blog, Partners, Contact, FAQ, Book a trial, My requests, Privacy, Terms, plus a 404 page.
+- **Blog powered by BlogSpeed**: posts written in [BlogSpeed](https://blogspeed.io) appear at `/blog/` and `/blog/<slug>/`, pre-rendered with their own SEO tags. See [Blog setup](#blog-setup-blogspeed).
 - **Search-ready**: every page is pre-rendered HTML with its own title, description, keywords, canonical URL, Open Graph image and Schema.org data; `sitemap.xml` and `robots.txt` are generated on each build. See [SEO](#seo).
 - **Live session status** in Bengaluru time: ground tabs, a "Who's training next" board and a weekly timetable, all refreshed every 15 seconds.
 - **Book a free trial** form: the date of birth sets the age group and programme, and the batch and date lists show only real sessions.
@@ -45,6 +46,7 @@ npm start          # run the site from source at http://localhost:3000
 npm run build      # build the production site into dist/
 npm run preview    # build, then serve dist/ the way GitHub Pages does
 npm run env        # only regenerate src/js/config/env.js from .env
+npm run blog       # only re-download blog posts from BlogSpeed (then refresh the browser)
 npm run og-image   # redraw assets/og-image.jpg (the link-sharing picture)
 ```
 
@@ -156,6 +158,41 @@ Email and WhatsApp are sent together. A request counts as sent if either one wor
 
 ---
 
+## Blog setup (BlogSpeed)
+
+Posts are written and published in BlogSpeed. The site downloads them **while building** and turns them into normal pages, so the secret API key is never sent to visitors' browsers (GitHub Pages has no server, and BlogSpeed rejects calls from browsers anyway).
+
+**1. Create the key (once)**
+1. Sign in at blogspeed.io → **Integrations** → **Create key**.
+2. Name it e.g. `V Soccer website`, tick **Read blogs** and **Read single blog**, click **Create**.
+3. Copy the key straight away (it starts `bs_live_ak_` and is shown only once).
+
+**2. On your computer**: add it to `.env`:
+```
+BLOGSPEED_API_URL=https://blogspeed.io/api
+BLOGSPEED_API_KEY=bs_live_ak_....sk_....
+```
+Then `npm start` and open http://localhost:3000/blog/. After publishing a new post, run `npm run blog` and refresh.
+
+**3. On GitHub**: **Settings → Secrets and variables → Actions → New repository secret**, name `BLOGSPEED_API_KEY`, value the same key. Then **Actions → CI/CD → Run workflow**.
+
+**Publishing a post**: publish it in BlogSpeed. The live site rebuilds by itself every 6 hours; to show it immediately, use **Actions → CI/CD → Run workflow**.
+
+How it works and the quota:
+- `scripts/blog.js` calls `GET /blogs/index` once per build, then `GET /blogs/:id` only for posts that are new or edited. Everything else comes from `.cache/blog/` (cached between CI runs). Four builds a day use about 120 of the 1,000 monthly requests.
+- Markdown is turned into HTML and cleaned (no scripts); the post's `#` headings become `<h2>` so each page keeps one `<h1>`.
+- Each post page gets its own title (`seo.metaTitle` or the title), description, keywords, Open Graph image (the cover), canonical URL, BlogSpeed's JSON-LD (BlogPosting / FAQPage) and a `lastmod` in `sitemap.xml`.
+- If BlogSpeed is down, the last cached copy is used. A wrong, revoked or under-scoped key stops the build, so the live site keeps its posts until you fix it.
+- No key at all: `/blog/` shows "No posts yet" and everything else works.
+- Scheduled GitHub runs pause after 60 days without commits; a push or a manual run turns them back on.
+
+| Problem | Fix |
+|---|---|
+| `401 Invalid API key format` | The key was cut off or has quotes or a space. Copy the full `bs_live_ak_….sk_…` again |
+| `403 API key missing required permission` | Create a new key with **Read blogs** ticked |
+| New post isn't on the site | It isn't Published yet in BlogSpeed, or the site hasn't rebuilt: Run workflow |
+| `429 rate limit exceeded` | Monthly quota used; the cached posts are still served. It resets on the 1st |
+
 ## Editing content
 
 All content lives in **`src/js/config/site.config.js`**.
@@ -163,6 +200,7 @@ All content lives in **`src/js/config/site.config.js`**.
 | To change | Edit |
 |---|---|
 | Inbox for form submissions (also shown on Contact), WhatsApp relay URL, WhatsApp chat number, Instagram | **`.env`** (not this file) |
+| Blog posts | **BlogSpeed** (not this repository); see [Blog setup](#blog-setup-blogspeed) |
 | School phone number and CallMeBot key | Script Properties of the Google Apps Script |
 | Batch days and times (current values are samples) | `GROUNDS[].sessions` |
 | Home page video | `HERO_VIDEO.src` (desktop) and `HERO_VIDEO.mobileSrc` (smaller file for phones) |
@@ -192,6 +230,7 @@ v-soccer-school/
 │   ├── check.js               SEO and link checks on dist/ (run by CI)
 │   ├── photos.js              Downloads photos as WebP with descriptive names
 │   ├── og-image.js            Draws assets/og-image.jpg
+│   ├── blog.js                Downloads posts from BlogSpeed -> src/js/config/blog-data.js
 │   └── env.js                 Reads .env and generates src/js/config/env.js
 ├── assets/                    Crest (WebP + PNG), favicons, share image, fonts/
 ├── dist/                      Built site (generated)
@@ -211,6 +250,7 @@ v-soccer-school/
         │   ├── site.config.js All site content and settings
         │   ├── seo.config.js  Page titles, descriptions, keywords, share image
         │   ├── photo-files.js Local photo list (filled in by the build)
+        │   ├── blog-data.js   Blog posts from BlogSpeed (generated, git-ignored)
         │   └── env.js         Generated from .env (git-ignored, do not edit)
         ├── core/
         │   ├── actions.js     Click handling for data-action="..." buttons

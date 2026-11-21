@@ -30,6 +30,8 @@ const KEYS = {
   SCHOOL_INSTAGRAM: "schoolInstagram",
   SITE_URL: "siteUrl",                        // public address, used for canonical URLs and the sitemap
 };
+// BLOGSPEED_API_KEY is deliberately NOT in this list: everything here is
+// shipped to the browser. The blog key is read only by scripts/blog.js.
 
 /* ---------------------------------------------------------------------------
    Parse .env  (KEY=value per line; # comments; optional quotes)
@@ -89,7 +91,7 @@ function writeEnvModule({ quiet = false } = {}) {
   return warnings;
 }
 
-module.exports = { createEnvModule, writeEnvModule, OUTPUT_FILE };
+module.exports = { createEnvModule, writeEnvModule, readEnvFile, OUTPUT_FILE };
 
 // `node scripts/env.js` (npm run env) writes the file directly
 if (require.main === module) {

@@ -3,7 +3,7 @@
  * core/router.js
  * ----------------------------------------------------------------------------
  * Path-based router. Every screen has a real, crawlable address:
- *   /   /about/   /grounds/varthur/   /book-trial/?ground=varthur
+ *   /   /about/   /grounds/varthur/   /book-trial/?ground=varthur   /blog/my-post/
  * Internally each screen keeps a short route name ("home", "about",
  * "ground-varthur"); urlFor() and routeFromPath() translate between the two.
  *
@@ -21,11 +21,13 @@ let renderCallback = () => {};
    Route name <-> URL
    ------------------------------------------------------------------------ */
 const GROUND_PREFIX = "ground-";
+const POST_PREFIX = "post-";       // "post-<slug>" <-> /blog/<slug>/
 
 /** "about" -> "/about/", "ground-insa" -> "/grounds/insa/", "home" -> "/" (+ query). */
 export function urlFor(route, query = {}) {
   let path = "/";
   if (route.startsWith(GROUND_PREFIX)) path = `/grounds/${route.slice(GROUND_PREFIX.length)}/`;
+  else if (route.startsWith(POST_PREFIX)) path = `/blog/${encodeURIComponent(route.slice(POST_PREFIX.length))}/`;
   else if (route && route !== "home") path = `/${route}/`;
 
   const params = Object.entries(query)
@@ -40,6 +42,7 @@ export function routeFromPath(pathname) {
   const parts = pathname.split("/").filter(Boolean).map(decodeURIComponent);
   if (parts.length === 0) return "home";
   if (parts[0] === "grounds" && parts[1]) return `${GROUND_PREFIX}${parts[1]}`;
+  if (parts[0] === "blog" && parts[1]) return `${POST_PREFIX}${parts[1]}`;
   if (parts[0] === "index.html") return "home";
   return parts[0];
 }

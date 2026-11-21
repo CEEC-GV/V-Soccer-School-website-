@@ -9,6 +9,7 @@
     "check": "node scripts/check.js",
     "preview": "node scripts/build.js && node server.js dist",
     "env": "node scripts/env.js",
+    "blog": "node scripts/blog.js",
     "og-image": "node scripts/og-image.js"
   },
   "engines": {
@@ -16,6 +17,8 @@
   },
   "devDependencies": {
     "esbuild": "0.25.12",
-    "playwright": "1.63.0"
+    "marked": "^15.0.12",
+    "playwright": "1.63.0",
+    "sanitize-html": "^2.18.2"
   }
 }

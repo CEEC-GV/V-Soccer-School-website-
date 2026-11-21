@@ -8,6 +8,9 @@
 # Generated from .env by scripts/env.js (contains the same private values)
 src/js/config/env.js
 
+# Generated from BlogSpeed by scripts/blog.js (rebuilt on every build)
+src/js/config/blog-data.js
+
 # ---------------------------------------------------------------------------
 # Build output (recreate with: npm run build)
 # ---------------------------------------------------------------------------
