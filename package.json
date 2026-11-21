@@ -16,9 +16,9 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "esbuild": "0.25.12",
-    "marked": "^15.0.12",
-    "playwright": "1.63.0",
+    "esbuild": "0.28.2",
+    "marked": "^18.2.1",
+    "playwright": "1.65.1",
     "sanitize-html": "^2.18.2"
   }
 }
